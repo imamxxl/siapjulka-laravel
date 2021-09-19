@@ -13,7 +13,7 @@
 @endsection
 
 @section('bagian-nav')
-    @include('layout.nav.nav-absensi-dosen')
+    @include('layout.nav.nav-absensi-mahasiswa')
 @endsection
 
 @section('isi-konten')

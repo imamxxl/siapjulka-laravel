@@ -21,17 +21,20 @@ class AbsensiMahasiswaController extends Controller
 {
     function index(Request $request)
     {
-        $cek_seksi = Seksi::all()->where('status', '1')
-            // 5332 akan diganti dengan Middleware User Dosen yang login
-            ->where('kode_dosen', '5322')
+        $cek_seksi = DB::table('seksis')
+            ->join('participants', 'participants.id_seksi', '=', 'seksis.id')
+            ->where('status', '1')
+            // 1 akan diganti dengan Middleware User Mahasiswa yang login
+            ->where('user_id', '1')
             ->count();
 
         $seksi = DB::table('seksis')
             ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
             ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
+            ->join('participants', 'participants.id_seksi', '=', 'seksis.id')
             ->where('seksis.status', '1')
             // 5332 akan diganti dengan Middleware User Dosen yang login
-            ->where('seksis.kode_dosen', '5322')
+            ->where('participants.user_id', '1')
             ->get();
 
         $participant = DB::table('participants')
@@ -39,7 +42,7 @@ class AbsensiMahasiswaController extends Controller
             ->join('users', 'users.id', '=', 'participants.user_id')
             ->get();
 
-        return view('dosen.absensi.absensi', compact('seksi', 'cek_seksi', 'participant'));
+        return view('mahasiswa.absensi.absensi', compact('seksi', 'cek_seksi', 'participant'));
     }
 
     function lihatPeserta($id)
@@ -496,7 +499,7 @@ class AbsensiMahasiswaController extends Controller
     }
 
     function resetAbsensi($id_absensi)
-    { 
+    {
         $keterangan_null = null;
         $catatan_null = null;
         $verifikasi_null = null;
@@ -945,5 +948,4 @@ class AbsensiMahasiswaController extends Controller
             'jmlh_pertemuan_saat_ini'
         ));
     }
-
 }
