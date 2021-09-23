@@ -89,10 +89,10 @@
                                         </td>
                                         <td>{{ $data->kode_dosen }}</td>
                                         <td>
-                                            <a class="btn bg-purple" href="/absensi_dosen/detail/{{ $data->id }}">
+                                            <a class="btn bg-purple" href="/absensi_mahasiswa/detail/{{ $data->id }}">
                                                 <i class="fa fa-fw fa-pencil-square-o"></i>Kelola Absensi
                                             </a>
-                                            <a class="btn btn-warning" href="/absensi_dosen/lihat_peserta/{{ $data->id }}">
+                                            <a class="btn btn-warning" href="/absensi_mahasiswa/lihat_peserta/{{ $data->id }}">
                                                 <i class="fa fa-fw fa-users">
                                                 </i> Lihat Peserta
                                             </a>

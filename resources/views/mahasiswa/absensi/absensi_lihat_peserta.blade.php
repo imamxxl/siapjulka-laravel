@@ -17,7 +17,7 @@
 @endsection
 
 @section('bagian-nav')
-    @include('layout.nav.nav-absensi-dosen')
+    @include('layout.nav.nav-absensi-mahasiswa')
 @endsection
 
 @section('isi-konten')
@@ -40,49 +40,6 @@
     <section class="content">
         <div class="row">
             <div class="box">
-                <div class="panel panel-success">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Tambah Peserta</h3>
-                    </div>
-                    <div class="panel-body">
-                        <form action="/seksi/detail/add_participant/" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        @foreach ($seksi as $list_seksi)
-                                            <input type="text" name="kode_seksi_detail" class="form-control hidden"
-                                                value="{{ $list_seksi->id }}" readonly>
-                                        @endforeach
-                                        <input type="text" class="form-control" name="nim" id="nim" placeholder="NIM"
-                                            readonly=""><br>
-                                        <input type="text" class="form-control" name="nama_mahasiswa" id="nama_mahasiswa"
-                                            placeholder="Nama Mahasiswa" readonly=""><br>
-                                        <input type="text" class="form-control" name="imei" id="imei" placeholder="IMEI"
-                                            readonly><br>
-                                        <input type="text" class="form-control hidden" name="user_id" id="user_id"
-                                            placeholder="User_ID" readonly=""><br>
-                                        <div class="text-danger">
-                                            @error('user_id')
-                                                {{ $message }}
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button type="button" class="btn btn-warning" data-toggle="modal"
-                                            data-target="#modal-add"><b>Cari</b> <span
-                                                class="glyphicon glyphicon-search"></span></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-success">Tambahkan Peserta</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="box">
                 <div class="box-header">
                     @foreach ($seksi as $item)
                         <h3 class="box-title center">Daftar Peserta Matakuliah {{ $item->nama_mk }}</h3>
@@ -94,11 +51,10 @@
                         <thead>
                             <tr>
                                 <th>No</th>
+                                <th>Foto</th>
                                 <th>NIM</th>
                                 <th>Peserta</th>
-                                <th>IMEI</th>
-                                <th>Keterangan</th>
-                                <th>Aksi</th>
+                                <th>Jenis Kelamin</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -106,41 +62,10 @@
                             @foreach ($participant as $data)
                                 <tr>
                                     <td class="content-header">{{ $no++ }}</td>
+                                    <td><img class="profile-user-img" src="{{ url('avatar/' . $data->avatar) }}"></td>
                                     <td>{{ $data->username }}</td>
                                     <td>{{ $data->nama }}</td>
-                                    @if ($data->imei_participant == null)
-                                        <td><i class="text-muted">Mahasiswa belum menginput IMEI</i></td>
-                                    @else
-                                        <td>{{ $data->imei_participant }}</td>
-                                    @endif
-                                    <!-- Keterangan -->
-                                    @if ($data->keterangan == '1')
-                                        <td>
-                                            <p class="text-green">Sudah Diverifikasi</p>
-                                        </td>
-                                    @else
-                                        <td>
-                                            <p class="text-red">Belum Diverifikasi</p>
-                                        </td>
-                                    @endif
-                                    @if ($data->keterangan == '1')
-                                        <td><button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-                                                data-target="#modal-hapus{{ $data->id_participant }}">
-                                                <i class="fa fa-fw fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    @else
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
-                                                data-target="#modal-verifikasi{{ $data->id_participant }}">
-                                                <i class="fa fa-fw fa-check"></i><i class="fa"> Verifikasi </i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-                                                data-target="#modal-hapus{{ $data->id_participant }}">
-                                                <i class="fa fa-fw fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    @endif
+                                    <td>{{ $data->jk }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -264,8 +189,9 @@
             @endforeach
 
             <div>
-                <a class="btn btn-primary" href="/absensi_dosen"> Kembali </a>
+                <a class="btn btn-primary" href="/absensi_mahasiswa"> Kembali </a>
             </div>
+
         </div>
     </section>
 

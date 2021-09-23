@@ -197,7 +197,7 @@
                     </div>
 
                     <div class="box-body">
-                        <a href="/absensi_dosen/detail/{{ $data->id }}/pertemuan/{{ $data->id_pertemuan }}/print"
+                        <a href="/absensi_mahasiswa/detail/{{ $data->id }}/pertemuan/{{ $data->id_pertemuan }}/print"
                             target="_blank" class="btn bg-green"><i class="fa fa-print"></i>
                             Print Absensi</a>
                     </div>
@@ -312,7 +312,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Batal</button>
-                            <a href="/absensi_dosen/verifikasi_absensi/{{ $data->id_absensi }}"
+                            <a href="/absensi_mahasiswa/verifikasi_absensi/{{ $data->id_absensi }}"
                                 class="btn btn-success">Verifikasi</a>
                         </div>
                     </div>
@@ -334,7 +334,7 @@
                             <h4 class="modal-title"> Tambahkan catatan {{ $data->nama }} ({{ $data->username }})
                             </h4>
                         </div>
-                        <form action="/absensi_dosen/catatan_absensi/{{ $data->id_absensi }}" method="POST"
+                        <form action="/absensi_mahasiswa/catatan_absensi/{{ $data->id_absensi }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="modal-body">
@@ -406,7 +406,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Batal</button>
-                            <a href="/absensi_dosen/reset_absensi/{{ $data->id_absensi }}" class="btn btn-danger">Reset</a>
+                            <a href="/absensi_mahasiswa/reset_absensi/{{ $data->id_absensi }}" class="btn btn-danger">Reset</a>
                         </div>
                     </div>
                     <!-- /.modal-content -->

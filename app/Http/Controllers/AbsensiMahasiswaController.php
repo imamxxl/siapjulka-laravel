@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Participant;
-use App\Models\Seksi;
 use App\Models\Pertemuan;
 use App\Models\Absensi;
-use Hamcrest\Core\HasToString;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -15,7 +12,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
-use PhpParser\Node\Stmt\TryCatch;
 
 class AbsensiMahasiswaController extends Controller
 {
@@ -66,7 +62,7 @@ class AbsensiMahasiswaController extends Controller
             ->orderBy('nama_mahasiswa', 'asc')
             ->get();
 
-        return view('dosen.absensi.absensi_lihat_peserta', compact('seksi', 'participant', 'seksi', 'mahasiswa'));
+        return view('mahasiswa.absensi.absensi_lihat_peserta', compact('seksi', 'participant', 'seksi', 'mahasiswa'));
     }
 
     function detailAbsensi($id)
@@ -80,9 +76,6 @@ class AbsensiMahasiswaController extends Controller
         $deteksi_participant = DB::table('participants')
             ->where('id_seksi', $id)
             ->count();
-
-        // link tambah peserta
-        $link_tambah_peserta = "/absensi_dosen/lihat_peserta/$id";
 
         // melihat matakuliah di seksi $id
         $nama_matakuliah = DB::table('seksis')
@@ -219,7 +212,7 @@ class AbsensiMahasiswaController extends Controller
         }
 
         // parsing data ke blade.php
-        return view('dosen.absensi.absensi_detail', compact(
+        return view('mahasiswa.absensi.absensi_detail', compact(
             'deteksi_participant',
             'link_tambah_peserta',
             'color',
@@ -448,7 +441,7 @@ class AbsensiMahasiswaController extends Controller
         $persentasi_total = round((($hitung_absensi_hadir + $hitung_absensi_izin) / $hitung_semua_peserta) * 100, 0);
 
         // parsing data ke view
-        return view('dosen.absensi.absensi_pertemuan', compact(
+        return view('mahasiswa.absensi.absensi_pertemuan', compact(
             'seksi',
             'kode_seksi',
             'absensis',
@@ -766,7 +759,7 @@ class AbsensiMahasiswaController extends Controller
             ->generate($qr_absensi);
 
         // parsing data
-        return view('dosen.print.print_absensi_pertemuan', compact(
+        return view('mahasiwa.print.print_absensi_pertemuan', compact(
             'absensis',
             'prodi',
             'sks',
@@ -926,9 +919,7 @@ class AbsensiMahasiswaController extends Controller
                 ->count();
         }
 
-        // dd($get_ket_alfa);
-
-        return view('dosen.print.print_absensi_persemester', compact(
+        return view('mahasiswa.print.print_absensi_persemester', compact(
             'absensis',
             'matakuliah',
             'get_kode_seksi',
