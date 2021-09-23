@@ -42,9 +42,8 @@
                 <div class="error-content">
                     <h3><i class="fa fa-warning text-yellow"></i> Maaf! Absensi tidak ditemukan.</h3>
                     <p>
-                        Silahkan mengisi seksi perkuliahan terlebih dahulu. <br><br>
-                        Untuk melakukannya, anda bisa meng-klik <a href="../../seksi_dosen">Seksi</a>. Kemudian buat seksi serta
-                        masukkan input detailnya.
+                        Anda tidak terdaftar diabsensi manapun. <br>
+                        Segera hubungi dosen yang mengajar di sesi matakuliah anda.
                     </p>
                 </div>
                 <!-- /.error-content -->
