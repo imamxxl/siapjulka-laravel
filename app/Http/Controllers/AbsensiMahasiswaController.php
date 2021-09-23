@@ -29,7 +29,7 @@ class AbsensiMahasiswaController extends Controller
             ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
             ->join('participants', 'participants.id_seksi', '=', 'seksis.id')
             ->where('seksis.status', '1')
-            // 5332 akan diganti dengan Middleware User Dosen yang login
+            // 5332 akan diganti dengan Middleware User Mahasiswa yang login
             ->where('participants.user_id', '1')
             ->get();
 
@@ -72,17 +72,6 @@ class AbsensiMahasiswaController extends Controller
             ->where('.id_seksi', $id)
             ->get();
 
-        // cek partisipant
-        $deteksi_participant = DB::table('participants')
-            ->where('id_seksi', $id)
-            ->count();
-
-        // melihat matakuliah di seksi $id
-        $nama_matakuliah = DB::table('seksis')
-            ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
-            ->where('id', $id)
-            ->get();
-
         // deteksi matakuliah single
         $data_seksi = DB::table('seksis')
             ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
@@ -112,18 +101,6 @@ class AbsensiMahasiswaController extends Controller
             'bg-teal',
         ];
 
-        // membuat random qrcode 6 digit
-        $qrcode_text = Str::random(6);
-
-        // generate qrcode format png dengan logo dan set ukuran
-        $qrcode = QrCode::format('png')
-            ->merge('qrcode_logo/launcher.png', 0.2, true)
-            ->size(175)
-            ->color(0, 0, 0)
-            ->eyeColor(0, 96, 92, 168, 0, 0, 0)
-            ->backgroundColor(255, 255, 255)
-            ->generate($qrcode_text);
-
         // melihat peserta yang berada di tabel participant yang sudah diverifikasi
         $participant = DB::table('participants')
             ->join('seksis', 'seksis.id', '=', 'participants.id_seksi')
@@ -138,15 +115,6 @@ class AbsensiMahasiswaController extends Controller
             ->where('id_seksi', '=', $id)
             ->get();
 
-        // menghitung jumlah peserta yang sudah diverifikasi
-        $hitung_peserta = DB::table('participants')
-            ->where('id_seksi', '=', $id)
-            ->where('keterangan', '=', '1')
-            ->count();
-
-        // kode_seksi disamakan dengan id_seksi
-        $kode_seksi = $id;
-
         // untuk memilih seksi
         $pilih_seksi = DB::table('seksis')
             ->where('id', $id)
@@ -157,12 +125,6 @@ class AbsensiMahasiswaController extends Controller
             ->where('id_seksi', $id)
             ->count();
 
-        // melihat detail peserta
-        $detail_peserta = DB::table('participants')
-            ->where('id_seksi', $id)
-            ->where('keterangan', '=', '1')
-            ->get();
-
         // membuat angka 0 sebagai permulaan awal looping (return deteksi pertemuan)
         $return_deteksi_pertemuan = 0;
 
@@ -172,68 +134,29 @@ class AbsensiMahasiswaController extends Controller
             ->groupBy('id_pertemuan')
             ->pluck('id_pertemuan');
 
-        // melakukan perulangan untuk kalkulasi peserta yang hadir di id_seksi yang sama namun id_pertemuan yang berbeda
-        $hitung_absensi_hadir = [];
+        // melakukan perulangan untuk deteksi peserta yang hadir di id_seksi yang sama namun id_pertemuan yang berbeda berdasarkan middleware user yang login
+        $get_keterangan = [];
         for ($i = 0; $i < count($deteksi_pertemuan); $i++) {
-            $hitung_absensi_hadir[] = DB::table('absensis')
-                ->where('keterangan', 'hadir')
+            $get_keterangan[] = DB::table('absensis')
                 ->where('absensis.id_seksi', $id)
                 ->where('absensis.id_pertemuan', '=', $deteksi_pertemuan[$i])
-                ->count();
-        }
-
-        // melakukan perulangan untuk kalkulasi peserta yang izin di id_seksi yang sama namun id_pertemuan yang berbeda
-        $hitung_absensi_izin = [];
-        for ($i = 0; $i < count($deteksi_pertemuan); $i++) {
-            $hitung_absensi_izin[] = DB::table('absensis')
-                ->where('keterangan', 'izin')
-                ->where('absensis.id_seksi', $id)
-                ->where('absensis.id_pertemuan', '=', $deteksi_pertemuan[$i])
-                ->count();
-        }
-
-        // melakukan perulangan untuk kalkulasi peserta yang alfa di id_seksi yang sama namun id_pertemuan yang berbeda
-        $hitung_absensi_alfa = [];
-        for ($i = 0; $i < count($deteksi_pertemuan); $i++) {
-            $hitung_absensi_alfa[] = DB::table('absensis')
-                ->where('keterangan', null)
-                ->where('absensis.id_seksi', $id)
-                ->where('absensis.id_pertemuan', '=', $deteksi_pertemuan[$i])
-                ->count();
-        }
-
-        // melakukan perulangan untuk kalkulasi peserta yang total di id_seksi yang sama namun id_pertemuan yang berbeda
-        $hitung_absensi_total = [];
-        for ($i = 0; $i < count($deteksi_pertemuan); $i++) {
-            $hitung_absensi_total[] = DB::table('absensis')
-                ->where('absensis.id_seksi', $id)
-                ->where('absensis.id_pertemuan', '=', $deteksi_pertemuan[$i])
-                ->count();
+                // 1 akan diganti dengan Middleware User Mahasiswa yang login
+                ->where('absensis.id_user', '1')
+                ->value('keterangan');
         }
 
         // parsing data ke blade.php
         return view('mahasiswa.absensi.absensi_detail', compact(
-            'deteksi_participant',
-            'link_tambah_peserta',
             'color',
             'color_hitung',
-            'kode_seksi',
             'participant',
-            'hitung_peserta',
             'pilih_seksi',
-            'qrcode_text',
-            'qrcode',
             'peserta',
-            'detail_peserta',
             'rincian_pertemuan',
             'hitung_pertemuan',
             'deteksi_pertemuan',
             'return_deteksi_pertemuan',
-            'hitung_absensi_hadir',
-            'hitung_absensi_izin',
-            'hitung_absensi_alfa',
-            'hitung_absensi_total',
-            'nama_matakuliah',
+            'get_keterangan',
             'data_seksi',
         ));
     }
@@ -339,7 +262,7 @@ class AbsensiMahasiswaController extends Controller
         $seksi = Absensi::find($id_seksi);
         $pertemuan = Absensi::find($id_pertemuan);
 
-        $previous = "/absensi_dosen/detail/$id_seksi";
+        $previous = "/absensi_mahasiswa/detail/$id_seksi";
 
         // mengambil tanggal pertemuan
         $tanggal_pertemuan = DB::table('pertemuans')
