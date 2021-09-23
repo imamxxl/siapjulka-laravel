@@ -51,7 +51,7 @@
     @endforeach
 
     <div class="row">
-        <div class=" col-md-12">
+        <div class="col-md-12">
             <div>
                 <button class="btn btn-primary color-palette" type="button" data-toggle="modal"
                     data-target="#modal-token">Token: {{ $data->token }}</button>
@@ -60,45 +60,58 @@
         </div>
     </div>
 
-    <div class="row">
-        <?php $no = 1; ?> <?php $pertemuanke = 1; ?>
-        @foreach ($rincian_pertemuan as $data)
-            <div class="col-md-6 col-md-6 col-xs-12">
-                <a href="/absensi_mahasiswa/detail/{{ $data->id_seksi }}/pertemuan/{{ $data->id_pertemuan }}">
-                    <div class="info-box {{ $color[$color_hitung] }}">
-                        <?php $color_hitung++; ?>
-                        <span class="info-box-icon">
-                            <h1>{{ $no++ }}</h1>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Pertemuan Ke-{{ $pertemuanke++ }} <span class="text pull-right">
-                                    {{ date('d-m-Y', strtotime($data->tanggal)) }}
-                                </span></span>
-                            @if ($data->materi == null)
-                                <span class="info-box-number progress-description text-"> <i> Belum ada catatan materi
-                                        perkuliahan </i> </span>
-                            @else
-                                <span class="info-box-number progress-description">{{ $data->materi }}</span>
-                            @endif
-                            <span class="progress-description">
-                                @if ($get_keterangan[$return_deteksi_pertemuan] == null)
-                                    Kehadiran: <b>alfa</b>
-                                @else
-                                    Kehadiran: <b>{{ $get_keterangan[$return_deteksi_pertemuan] }}</b>
-                                @endif
-                            </span>
-                        </div>
-                        <!-- /.info-box-content -->
-                    </div>
-
-                </a>
-                <!-- /.info-box -->
+    @if ($hitung_pertemuan == 0)
+        <div class="row">
+            <div class="col-md-12">
+                <div>
+                    <h3>Belum ada pertemuan!</h3>
+                    <p>Dosen belum membuat pertemuan di sesi matakuliah ini. Silahkan konfirmasikan ke dosen terkait untuk segera membuat pertemuan.</p>
+                </div>
+                <br>
             </div>
-            <!-- /.col -->
-            <?php $return_deteksi_pertemuan++; ?>
-        @endforeach
-    </div>
-    <!-- /.row -->
+        </div>
+    @else
+        <div class="row">
+            <?php $no = 1; ?> <?php $pertemuanke = 1; ?>
+            @foreach ($rincian_pertemuan as $data)
+                <div class="col-md-6 col-md-6 col-xs-12">
+                    <a href="/absensi_mahasiswa/detail/{{ $data->id_seksi }}/pertemuan/{{ $data->id_pertemuan }}">
+                        <div class="info-box {{ $color[$color_hitung] }}">
+                            <?php $color_hitung++; ?>
+                            <span class="info-box-icon">
+                                <h1>{{ $no++ }}</h1>
+                            </span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Pertemuan Ke-{{ $pertemuanke++ }} <span
+                                        class="text pull-right">
+                                        {{ date('d-m-Y', strtotime($data->tanggal)) }}
+                                    </span></span>
+                                @if ($data->materi == null)
+                                    <span class="info-box-number progress-description text-"> <i> Belum ada catatan materi
+                                            perkuliahan </i> </span>
+                                @else
+                                    <span class="info-box-number progress-description">{{ $data->materi }}</span>
+                                @endif
+                                <span class="progress-description">
+                                    @if ($get_keterangan[$return_deteksi_pertemuan] == null)
+                                        Kehadiran: <b>alfa</b>
+                                    @else
+                                        Kehadiran: <b>{{ $get_keterangan[$return_deteksi_pertemuan] }}</b>
+                                    @endif
+                                </span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+
+                    </a>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <?php $return_deteksi_pertemuan++; ?>
+            @endforeach
+        </div>
+        <!-- /.row -->
+    @endif
 
     <!-- Modal Token -->
     <div class="modal modal-primary fade" id="modal-token">
