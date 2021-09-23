@@ -81,13 +81,11 @@
                                 <span class="info-box-number progress-description">{{ $data->materi }}</span>
                             @endif
                             <span class="progress-description">
-                                Hadir : {{ $hitung_absensi_hadir[$return_deteksi_pertemuan] }}
-                                &nbsp;
-                                Izin : {{ $hitung_absensi_izin[$return_deteksi_pertemuan] }}
-                                &nbsp;
-                                Alfa : {{ $hitung_absensi_alfa[$return_deteksi_pertemuan] }}
-                                <br>
-                                Total : {{ $hitung_absensi_total[$return_deteksi_pertemuan] }}
+                                @if ($get_keterangan[$return_deteksi_pertemuan] == null)
+                                    Kehadiran: <b>alfa</b>
+                                @else
+                                    Kehadiran: <b>{{ $get_keterangan[$return_deteksi_pertemuan] }}</b>
+                                @endif
                             </span>
                         </div>
                         <!-- /.info-box-content -->
@@ -101,117 +99,6 @@
         @endforeach
     </div>
     <!-- /.row -->
-
-    <!-- Modal Add-->
-    <div class="modal fade" id="modal-add-pertemuan">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="text-center modal-title">Buat Pertemuan Perkuliahan Matakuliah @foreach ($nama_matakuliah as $makul) {{ $makul->nama_mk }}
-                        @endforeach
-                    </h4>
-                </div>
-
-                <div class="modal-body">
-                    <form action="/absensi_mahasiswa/insert_pertemuan_absensi/" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="box-body">
-                            <div class="form-group hidden">
-                                <label>Seksi</label>
-                                <label class="text-danger">*</label>
-                                <input type="text" name="kode_seksi" class="form-control" value="{{ $kode_seksi }}"
-                                    readonly>
-                            </div>
-
-                            <div class="form-group">
-                                <label>QR Code</label>
-                                <label class="text-danger">*</label>
-                                <input type="text" name="qrcode_text" class="form-control hidden"
-                                    value="{{ $qrcode_text }}" readonly>
-                            </div>
-
-                            <div class="form-group">
-                                <img src="data:image/png;base64,{!! base64_encode($qrcode) !!}">
-                                <input type="text" name="base64image" value="{!! base64_encode($qrcode) !!}" hidden>
-                                @foreach ($nama_matakuliah as $makul)
-                                    <input type="text" name="nama_seksi" value="{{ $makul->kode_seksi }}" hidden>
-                                @endforeach
-                            </div>
-
-                            <div class="form-group">
-                                <label>Tanggal</label>
-                                <label class="text-danger">*</label>
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input name="tanggal_picker" type="text" class="form-control pull-right" id="datepicker"
-                                        placeholder="07/26/2021">
-                                </div>
-                                <div class="text-danger">
-                                    @error('tanggal_picker')
-                                        {{ $message }}
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Materi Kuliah (Optional)</label>
-                                <textarea name="materi" class="form-control" rows="3"
-                                    placeholder="Masukkan Materi ..."></textarea>
-                            </div>
-                            <div class="form-group hidden">
-                                <label>Jumlah Peserta</label>
-                                <label class="text-danger">*</label>
-                                <input type="text" name="jumlah_peserta" class="form-control"
-                                    value="{{ $hitung_peserta }}" readonly>
-                            </div>
-                            @foreach ($detail_peserta as $data)
-                                <input type="hidden" name="detail_peserta[]" value="{{ $data->user_id }}">
-                            @endforeach
-                            @foreach ($detail_peserta as $data)
-                                <input type="hidden" name="imei_peserta[]" value="{{ $data->imei_participant }}">
-                            @endforeach
-                            <div class="form-group">
-                                <label>Peserta</label>
-                                <label class="text-danger">*</label>
-                                <table id="datatablepertemuan" class="table table-bordered table-hover table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>NIM</th>
-                                            <th>Mahasiswa</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $no = 1; ?>
-                                        @foreach ($participant as $data)
-                                            <tr class="pilih" data-id="{{ $data->username }}"
-                                                data-nama=" {{ $data->nama }}">
-                                                <td class=" content-header">{{ $no++ }}</td>
-                                                <td>{{ $data->username }}</td>
-                                                <td>{{ $data->nama }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn bg-blue btn-block">Simpan
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-    </div>
 
     <!-- Modal Token -->
     <div class="modal modal-primary fade" id="modal-token">
