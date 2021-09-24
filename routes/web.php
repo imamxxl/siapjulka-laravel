@@ -16,6 +16,7 @@ use App\Http\Controllers\SeksiDosenController;
 use App\Http\Controllers\AbsensiDosenController;
 use App\Http\Controllers\AbsensiMahasiswaController;
 use App\Http\Controllers\CariKelasController;
+use App\Http\Controllers\FAQMahasiswaController;
 
 
 /*
@@ -185,3 +186,4 @@ Route::get('/absensi_mahasiswa/lihat_peserta/{id}', [AbsensiMahasiswaController:
 Route::get('/absensi_mahasiswa/detail/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiMahasiswaController::class, 'detailPertemuan']);
 Route::get('/absensi_mahasiswa/detail/{id_seksi}/pertemuan/{id_pertemuan}/print', [AbsensiMahasiswaController::class, 'printPertemuan']);
 Route::get('/absensi_mahasiswa/detail/{id_seksi}/print', [AbsensiMahasiswaController::class, 'printPerSemester']);
+Route::get('/faq_mahasiswa', [FAQMahasiswaController::class, 'index']);
