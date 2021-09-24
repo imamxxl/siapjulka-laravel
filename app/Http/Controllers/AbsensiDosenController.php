@@ -660,7 +660,7 @@ class AbsensiDosenController extends Controller
         $seksi = Absensi::find($id_seksi);
         $pertemuan = Absensi::find($id_pertemuan);
 
-        $previous = "/absensi/detail/$id_seksi";
+        $previous = "/absensi_dosen/detail/$id_seksi";
 
         // mengambil tanggal pertemuan
         $tanggal_pertemuan = DB::table('pertemuans')
