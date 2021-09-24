@@ -182,14 +182,6 @@ Route::post('/cari_kelas/detail/tambah_participant', [CariKelasController::class
 Route::get('/absensi_mahasiswa', [AbsensiMahasiswaController::class, 'index'])->name('absensi-mahasiswa');
 Route::get('/absensi_mahasiswa/detail/{id}', [AbsensiMahasiswaController::class, 'detailAbsensi']);
 Route::get('/absensi_mahasiswa/lihat_peserta/{id}', [AbsensiMahasiswaController::class, 'lihatPeserta']);
-Route::post('/absensi_mahasiswa/insert_pertemuan_absensi/', [AbsensiMahasiswaController::class, 'insertPertemuanAbsensi']);
 Route::get('/absensi_mahasiswa/detail/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiMahasiswaController::class, 'detailPertemuan']);
-Route::get('/absensi_mahasiswa/verifikasi_absensi/{id_absensi}', [AbsensiMahasiswaController::class, 'verifikasiAbsensi']);
-Route::post('/absensi_mahasiswa/catatan_absensi/{id_absensi}', [AbsensiMahasiswaController::class, 'catatanAbsensi']);
-Route::get('/absensi_mahasiswa/reset_absensi/{id_absensi}', [AbsensiMahasiswaController::class, 'resetAbsensi']);
-Route::get('/download_mahasiswa/seksi{id_seksi}/qrcode{id_pertemuan}', [AbsensiMahasiswaController::class, 'downloadQRCode']);
-Route::post('/recovery_mahasiswa/qrcode/absensi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiMahasiswaController::class, 'recoveryQRCode']);
-Route::post('/edit_mahasiswa/seksi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiMahasiswaController::class, 'editPertemuan']);
-Route::get('/delete_mahasiswa/seksi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiMahasiswaController::class, 'deletePertemuan']);
 Route::get('/absensi_mahasiswa/detail/{id_seksi}/pertemuan/{id_pertemuan}/print', [AbsensiMahasiswaController::class, 'printPertemuan']);
 Route::get('/absensi_mahasiswa/detail/{id_seksi}/print', [AbsensiMahasiswaController::class, 'printPerSemester']);
