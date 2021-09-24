@@ -87,7 +87,7 @@
                         @endforeach
 
                         <h5 class="widget-user-desc">Pertemuan tanggal:
-                            {{ date('m-d-Y', strtotime($tanggal_pertemuan)) }}
+                            {{ date('d-m-Y', strtotime($tanggal_pertemuan)) }}
                         </h5>
 
                     </div>
