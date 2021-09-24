@@ -57,12 +57,7 @@ class AbsensiMahasiswaController extends Controller
             ->orderBy('nama', 'asc')
             ->get();
 
-        $mahasiswa = DB::table('mahasiswas')
-            ->whereNotIn('user_id', DB::table('participants')->select('user_id')->where('id_seksi', '=', $id))
-            ->orderBy('nama_mahasiswa', 'asc')
-            ->get();
-
-        return view('mahasiswa.absensi.absensi_lihat_peserta', compact('seksi', 'participant', 'seksi', 'mahasiswa'));
+        return view('mahasiswa.absensi.absensi_lihat_peserta', compact('seksi', 'participant'));
     }
 
     function detailAbsensi($id)
@@ -161,107 +156,13 @@ class AbsensiMahasiswaController extends Controller
         ));
     }
 
-    function insertPertemuanAbsensi(Request $request)
-    {
-        // Jika ada data yang tidak terisi maka lakukan hal di bawah ini
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'kode_seksi' => 'required',
-                'tanggal_picker' => 'required',
-            ],
-            [
-                'kode_seksi.required' => 'Wajib diisi.',
-                'tanggal_picker.required' => 'Wajib diisi.',
-            ]
-        );
-
-        // created_at & updated_at
-        $created_at = date('Y-m-d H:i:s');
-        $updated_at = date('Y-m-d H:i:s');
-
-        if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput()
-                ->with('pesan-gagal', 'Pertemuan gagal dibuat!');
-        }
-
-        // Auth::user()->sent()->create([
-        //     'tel'       => $request->tel,
-        //     'email'    => $request->email,
-        //     'start' => date("Y-m-d", strtotime($request->datepicker)),
-        //     'end'       => date("Y-m-d", strtotime($request->datepicker1)),
-        //     'supervisor'    => $request->supervisor,
-        //     'department' => $request->department,
-        //     'name'    => $request->name,
-        //     'adress' => $request->adress,
-        // ]);   
-        // return view('home');
-
-        // insert ke tabel Pertemuans
-        $pertemuan = new Pertemuan;
-        $pertemuan->id_seksi = $request->kode_seksi;
-
-        $pertemuan->tanggal = date("Y-m-d", strtotime($request->tanggal_picker));
-
-        $pertemuan->materi = $request->materi;
-        $pertemuan->save();
-
-        // mendapatkan tanggal inputan yang dimasukkan admin untuk dijadikan nama qr_code
-        $date_day = date("Ymd", strtotime($request->tanggal_picker));
-
-        // mendapatkan id_pertemuan terakhir dan menambahkannya dengan 1. Fungsinya untuk menamai image qr_code
-        $max_id_pertemuan = DB::table('pertemuans')->max('id_pertemuan');
-        // $add_id_pertemuan = $max_id_pertemuan + 1;
-        $equal_id_pertemuan = sprintf("%06s", $max_id_pertemuan);
-
-        // mendapatkan kode_seksi dari kode_seksi pada database
-        $kode_seksi = $request->nama_seksi;
-
-        // insert ke tabel Absensis
-        $jumlah_peserta = $request->jumlah_peserta;
-        $id_pertemuan = $pertemuan->id_pertemuan;
-        $id_user = $request->detail_peserta;
-        $imei_absensi = $request->imei_peserta;
-        $id_seksi = $request->kode_seksi;
-        $qrcode = $request->qrcode_text;
-
-        $data = [];
-
-        for ($i = 0; $i < $jumlah_peserta; $i++) {
-            $data[] = [
-                'id_pertemuan' => $id_pertemuan,
-                'id_seksi' => $id_seksi,
-                'id_user' => $id_user[$i],
-                'imei_absensi' =>  $imei_absensi[$i],
-                'qrcode' => $qrcode,
-                'qrcode_image' => $kode_seksi . '-' . $equal_id_pertemuan . '-' . $date_day . '.png',
-                'created_at' => $created_at,
-                'updated_at' => $updated_at
-            ];
-        }
-
-        DB::table('absensis')->insert($data);
-
-        // insert qr code image ke folder public
-        $image = $request->base64image;
-        $image = str_replace('data:image/png;base64,', '', $image);
-        $image = str_replace(' ', '+', $image);
-        $imageName = $kode_seksi . '-' . $equal_id_pertemuan . '-' . $date_day . '.png';
-
-        File::put(storage_path('/app/public/qrcodes') . '/' . $imageName, base64_decode($image));
-
-        return redirect()->back()->with('pesan-sukses', 'Pertemuan berhasil dibuat.');
-    }
-
     function detailPertemuan($id_seksi, $id_pertemuan)
     {
         // Membaca/mengambil value id_seksi dan id_pertemuan dari route link website
         $seksi = Absensi::find($id_seksi);
         $pertemuan = Absensi::find($id_pertemuan);
 
+        // link kembali ke halaman sebelumnya
         $previous = "/absensi_mahasiswa/detail/$id_seksi";
 
         // mengambil tanggal pertemuan
@@ -269,48 +170,23 @@ class AbsensiMahasiswaController extends Controller
             ->where('id_pertemuan', $id_pertemuan)
             ->value('tanggal');
 
-        $materi_pertemuan = DB::table('pertemuans')
-            ->where('id_pertemuan', $id_pertemuan)
-            ->value('materi');
-
         // Mengambil value qrcode dari database pada tabel absensis
-        $qr_absensi = DB::table('absensis')
-            ->where('absensis.id_seksi', $id_seksi)
-            ->where('absensis.id_pertemuan', $id_pertemuan)
-            ->value('qrcode');
+        $qr_absensi = 'QR Code ini hanya contoh, mintalah QR Code yang valid kepada dosen matakuliah terkait';
 
         // Generate QR-Code ekstensi PNG berdasarkan data $qr_absensi
         $qrcode = QrCode::format('png')
             ->merge('qrcode_logo/launcher.png', 0.2, true)
-            ->size(175)
+            ->size(220)
             ->color(0, 0, 0)
             ->eyeColor(0, 96, 92, 168, 0, 0, 0)
             ->backgroundColor(255, 255, 255)
             ->generate($qr_absensi);
-
-        // membuat data QR-Code text baru dengan 6 karakter baru yang acak
-        $qrcode_text_baru = Str::random(6);
-
-        // generate QR-Code baru berdasarkan data 6 karakter acak pada variabel $qrcode_text_baru
-        $qrcode_baru = QrCode::format('png')
-            ->merge('qrcode_logo/launcher.png', 0.2, true)
-            ->size(175)
-            ->color(0, 0, 0)
-            ->eyeColor(0, 96, 92, 168, 0, 0, 0)
-            ->backgroundColor(255, 255, 255)
-            ->generate($qrcode_text_baru);
 
         // variabel qr_image digunakan sebagai penampung value dari route link $id_seksi dan $id_pertemuan
         $qr_image = DB::table('pertemuans')
             ->join('seksis', 'pertemuans.id_seksi', '=', 'seksis.id')
             ->where('pertemuans.id_seksi', $id_seksi)
             ->where('pertemuans.id_pertemuan', $id_pertemuan)
-            ->get();
-
-        // Melihat matakuliah pada sesi halaman
-        $matakuliah = DB::table('seksis')
-            ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
-            ->where('seksis.id', $id_seksi)
             ->get();
 
         // Fetch data dari tabel absensi di mana data akan disaring dengan where sesuai $id_seksi dan $id_pertemuan
@@ -320,7 +196,8 @@ class AbsensiMahasiswaController extends Controller
             ->join('users', 'absensis.id_user', '=', 'users.id')
             ->where('absensis.id_seksi', $id_seksi)
             ->where('absensis.id_pertemuan', $id_pertemuan)
-            ->orderBy('nama', 'ASC')
+            // 1 akan diganti dengan Middleware User Mahasiswa yang login
+            ->where('id_user', '1')
             ->get();
 
         // mendapatkan kode_seksi dari database
@@ -328,40 +205,11 @@ class AbsensiMahasiswaController extends Controller
             ->where('seksis.id', $id_seksi)
             ->value('kode_seksi');
 
-        // variabel penghitung peserta yang hadir
-        $hitung_absensi_hadir = DB::table('absensis')
-            ->where('keterangan', 'hadir')
-            ->where('absensis.id_seksi', $id_seksi)
-            ->where('absensis.id_pertemuan', $id_pertemuan)
-            ->count();
-
-        // variabel penghitung peserta yang izin
-        $hitung_absensi_izin = DB::table('absensis')
-            ->where('keterangan', 'izin')
-            ->where('absensis.id_seksi', $id_seksi)
-            ->where('absensis.id_pertemuan', $id_pertemuan)
-            ->count();
-
-        // variabel penghitung peserta yang alfa
-        $hitung_absensi_alfa = DB::table('absensis')
-            ->where('keterangan', null)
-            ->where('absensis.id_seksi', $id_seksi)
-            ->where('absensis.id_pertemuan', $id_pertemuan)
-            ->count();
-
-        // Variabel penghitung semua peserta
-        $hitung_semua_peserta = DB::table('absensis')
-            ->where('absensis.id_seksi', $id_seksi)
-            ->where('absensis.id_pertemuan', $id_pertemuan)
-            ->count();
-
-        $persentasi_hadir = round(($hitung_absensi_hadir / $hitung_semua_peserta) * 100, 0);
-
-        $persentasi_izin = round(($hitung_absensi_izin / $hitung_semua_peserta) * 100, 0);
-
-        $persentasi_alfa = round(($hitung_absensi_alfa / $hitung_semua_peserta) * 100, 0);
-
-        $persentasi_total = round((($hitung_absensi_hadir + $hitung_absensi_izin) / $hitung_semua_peserta) * 100, 0);
+        // mendapatkan kode_seksi dari database
+        $deteksi_matakuliah = DB::table('seksis')
+            ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
+            ->where('seksis.id', $id_seksi)
+            ->value('nama_mk');
 
         // parsing data ke view
         return view('mahasiswa.absensi.absensi_pertemuan', compact(
@@ -369,216 +217,21 @@ class AbsensiMahasiswaController extends Controller
             'kode_seksi',
             'absensis',
             'pertemuan',
-            'hitung_absensi_hadir',
-            'hitung_absensi_izin',
-            'hitung_absensi_alfa',
             'qrcode',
             'qr_absensi',
             'qr_image',
-            'qrcode_text_baru',
-            'qrcode_baru',
-            'matakuliah',
+            'deteksi_matakuliah',
             'tanggal_pertemuan',
             'previous',
-            'persentasi_hadir',
-            'persentasi_izin',
-            'persentasi_alfa',
-            'persentasi_total'
         ));
     }
-
-    function verifikasiAbsensi($id_absensi)
-    {
-        $absensi = Absensi::find($id_absensi);
-        $absensi->verifikasi = '1';
-        $absensi->update();
-
-        return redirect()->back()->with('pesan-sukses', 'Data Absensi berhasil diverifikasi.');
-    }
-
-    function catatanAbsensi(Request $request, $id_absensi)
-    {
-        $absensi = Absensi::find($id_absensi);
-
-        $req_cat_absensi = $request->catatan_absensi;
-
-        if ($req_cat_absensi == null) {
-            $absensi->keterangan = $request->radio_hadir;
-            $absensi->save();
-            return redirect()->back()->with('pesan-sukses', 'Catatan Absensi berhasil dibuat.');
-        } else {
-            $absensi->keterangan = $request->radio_hadir;
-            $absensi->catatan = $request->catatan_absensi;
-            $absensi->save();
-            return redirect()->back()->with('pesan-sukses', 'Catatan Absensi berhasil dibuat.');
-        }
-    }
-
-    function resetAbsensi($id_absensi)
-    {
-        $keterangan_null = null;
-        $catatan_null = null;
-        $verifikasi_null = null;
-
-        $absensi = Absensi::find($id_absensi);
-        $absensi->keterangan = $keterangan_null;
-        $absensi->catatan = $catatan_null;
-        $absensi->verifikasi = $verifikasi_null;
-        $absensi->save();
-
-        return redirect()->back()->with('pesan-sukses', 'Data absensi berhasil direset.');
-    }
-
-    function downloadQRCode($id_seksi, $id_pertemuan)
-    {
-        $file_name = DB::table('absensis')
-            ->where('absensis.id_seksi', $id_seksi)
-            ->where('absensis.id_pertemuan', $id_pertemuan)
-            ->value('qrcode_image');
-
-        $file = Storage::disk('qrcodes')->get($file_name);
-
-        return (new Response($file, 200))
-            ->header('Content-Type', 'image/png');
-    }
-
-    function recoveryQRCode(Request $request, $id_seksi, $id_pertemuan)
-    {
-        $updated_at = date('Y-m-d H:i:s');
-
-        $kode_seksi = $request->nama_seksi;
-
-        $equal_id_pertemuan = sprintf("%06s", $id_pertemuan);
-
-        $date_day = date("Ymd", strtotime($request->tanggal));
-
-        DB::table('absensis')
-            ->where('id_seksi', $id_seksi)
-            ->where('id_pertemuan', $id_pertemuan)
-            ->update(
-                ['qrcode' => $request->qrcode_text_baru],
-                ['updated_at' => $updated_at]
-            );
-
-        $image = $request->base64image;
-        $image = str_replace('data:image/png;base64,', '', $image);
-        $image = str_replace(' ', '+', $image);
-        $imageName = $kode_seksi . '-' . $equal_id_pertemuan . '-' . $date_day . '.png';
-
-        File::put(storage_path('/app/public/qrcodes') . '/' . $imageName, base64_decode($image));
-
-        return redirect()->back()->with('pesan-sukses', 'QR-Code berhasil diperbaharui.');
-    }
-
-    function editPertemuan(Request $request, $id_seksi, $id_pertemuan)
-    {
-        $pertemuan = Pertemuan::find($id_pertemuan);
-
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'tanggal_picker' => 'required',
-            ],
-            [
-                'tanggal_picker.required' => 'Wajib diisi.',
-            ]
-        );
-
-        $updated_at = date('Y-m-d H:i:s');
-
-        // mendapatkan kode_seksi dari database
-        $kode_seksi = DB::table('seksis')
-            ->where('seksis.id', $id_seksi)
-            ->value('kode_seksi');
-
-        $equal_id_pertemuan = sprintf("%06s", $id_pertemuan);
-
-        $date_day = date("Ymd", strtotime($request->tanggal_picker));
-
-        if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput()
-                ->with('pesan-gagal', 'Data Absensi pada pertemuan ini gagal diperbaharui!');
-        }
-
-        // membaca qrcode lama lalu menghapus file qrcode lama
-        $nama_qrcode_lama = DB::table('absensis')
-            ->where('absensis.id_seksi', $id_seksi)
-            ->where('absensis.id_pertemuan', $id_pertemuan)
-            ->value('qrcode_image');
-
-        unlink(storage_path('app/public/qrcodes/' . $nama_qrcode_lama));
-
-        // Update ke table pertemuan
-        $pertemuan->tanggal = date("Y-m-d", strtotime($request->tanggal_picker));
-        $pertemuan->materi = $request->materi;
-        $pertemuan->updated_at = $updated_at;
-        $pertemuan->save();
-
-        // Update ke table absensi
-        DB::table('absensis')
-            ->where('id_seksi', $id_seksi)
-            ->where('id_pertemuan', $id_pertemuan)
-            ->update(
-                ['qrcode_image' => $kode_seksi . '-' . $equal_id_pertemuan . '-' . $date_day . '.png']
-            );
-
-        $image = $request->base64image;
-        $image = str_replace('data:image/png;base64,', '', $image);
-        $image = str_replace(' ', '+', $image);
-        $imageName = $kode_seksi . '-' . $equal_id_pertemuan . '-' . $date_day . '.png';
-
-        File::put(storage_path('/app/public/qrcodes') . '/' . $imageName, base64_decode($image));
-
-        return redirect()->back()->with('pesan-sukses', 'Data Absensi pada pertemuan ini berhasil diubah.');
-    }
-
-    function deletePertemuan($id_seksi, $id_pertemuan)
-    {
-        // $pertemuan = Pertemuan::find($id_pertemuan);
-
-        $pertemuan = DB::table('pertemuans')
-            ->where('id_pertemuan', $id_pertemuan);
-
-        $absensi = DB::table('absensis')
-            ->where('id_pertemuan', $id_pertemuan)
-            ->where('id_seksi', $id_seksi);
-
-        $previous = "/absensi_dosen/detail/$id_seksi";
-
-        // membaca qrcode lama lalu menghapus file qrcode lama
-        $nama_qrcode_lama = DB::table('absensis')
-            ->where('absensis.id_seksi', $id_seksi)
-            ->where('absensis.id_pertemuan', $id_pertemuan)
-            ->value('qrcode_image');
-
-        if ($pertemuan != null && $absensi != null) {
-
-            // membaca qrcode lama lalu menghapus file qrcode lama
-            $nama_qrcode_lama = DB::table('absensis')
-                ->where('absensis.id_seksi', $id_seksi)
-                ->where('absensis.id_pertemuan', $id_pertemuan)
-                ->value('qrcode_image');
-
-            unlink(storage_path('app/public/qrcodes/' . $nama_qrcode_lama));
-
-            $pertemuan->delete();
-            $absensi->delete();
-
-            return redirect($previous)->with(['pesan-sukses' => 'Pertemuan berhasil dihapus.']);
-        }
-
-        return redirect($previous)->with(['pesan-gagal' => 'Pertemuan gagal dihapus.']);
-    }
-
+    
     function printPertemuan($id_seksi, $id_pertemuan)
     {
         $seksi = Absensi::find($id_seksi);
         $pertemuan = Absensi::find($id_pertemuan);
 
-        $previous = "/absensi/detail/$id_seksi";
+        $previous = "/absensi_mahasiswa/detail/$id_seksi";
 
         // mengambil tanggal pertemuan
         $tanggal_pertemuan = DB::table('pertemuans')
@@ -682,7 +335,7 @@ class AbsensiMahasiswaController extends Controller
             ->generate($qr_absensi);
 
         // parsing data
-        return view('mahasiwa.print.print_absensi_pertemuan', compact(
+        return view('mahasiswa.print.print_absensi_pertemuan', compact(
             'absensis',
             'prodi',
             'sks',
