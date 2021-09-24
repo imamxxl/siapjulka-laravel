@@ -58,6 +58,6 @@
         <a href="/absensi_mahasiswa"><i class="fa fa-pencil-square-o"></i> <span>Absensi</span> </a>
     </li>
     <li>
-        <a href="/laporan_absensi"><i class="fa fa-calendar-check-o"></i> <span>Laporan</span> </a>
+        <a href="/faq_mahasiswa"><i class="fa fa-question-circle"></i> <span>FAQ</span> </a>
     </li>
 </ul>
