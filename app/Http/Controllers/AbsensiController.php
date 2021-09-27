@@ -586,6 +586,7 @@ class AbsensiController extends Controller
             ->where('absensis.id_pertemuan', $id_pertemuan)
             ->value('qrcode_image');
 
+        // menghapus qr code lama di folder public di dalam system
         unlink(storage_path('app/public/qrcodes/' . $nama_qrcode_lama));
 
         // Update ke table pertemuan
@@ -941,5 +942,4 @@ class AbsensiController extends Controller
             'jmlh_pertemuan_saat_ini'
         ));
     }
-    
 }
