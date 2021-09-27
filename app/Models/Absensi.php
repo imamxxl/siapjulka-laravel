@@ -29,4 +29,6 @@ class Absensi extends Model
     {
         return $this->belongsTo(Pertemuan::class);
     }
+
+    protected $hidden = ['imei_absensi', 'qrcode_image', 'created_at', 'updated_at' ];
 }

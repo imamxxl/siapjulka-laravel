@@ -17,4 +17,6 @@ class Participant extends Model
         'created_at',
         'updated_at'
     ];
+
+    protected $hidden = ['imei_participant', 'created_at', 'updated_at'];
 }
