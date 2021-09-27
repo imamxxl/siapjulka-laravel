@@ -89,7 +89,7 @@ class CariKelasController extends Controller
         $created_at = date('Y-m-d H:i:s');
         $updated_at = date('Y-m-d H:i:s');
 
-        // get data form
+        // get data form csrf
         $id_seksi = $request->id_seksi;
         $user_id = $request->user_id;
         $imei = $request->imei;
@@ -110,8 +110,8 @@ class CariKelasController extends Controller
             ];
 
             Participant::create($data);
-            return redirect('/cari_kelas')
-                ->with('pesan-sukses', 'Selamat, anda berhasil bergabung.');
+            
+            return redirect('/cari_kelas')->with('pesan-sukses', 'Selamat, anda berhasil bergabung.');
         } else {
             return redirect()
                 ->back()
