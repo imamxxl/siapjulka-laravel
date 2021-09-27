@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\APIAbsensiController;
+use App\Http\Controllers\APIParticipantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +16,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+// For Participant
+Route::post('/participant', [APIParticipantController::class, 'post']);
+Route::get('/participants', [APIParticipantController::class, 'get']);
+Route::get('/participant/{id_participant}', [APIParticipantController::class, 'getById']);
+
+// For Absensi
+Route::get('/absensis', [APIAbsensiController::class, 'get']);
+Route::get('/absensi/{id_absensi}', [APIAbsensiController::class, 'getById']);
+Route::put('/absensi/{id_absensi}', [APIAbsensiController::class, 'put']);
+
+
 
 
