@@ -2,8 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\APIAbsensiController;
-use App\Http\Controllers\APIParticipantController;
+use App\Http\Controllers\API\AbsensiController;
+use App\Http\Controllers\API\ParticipantController;
+use App\Models\Mahasiswa;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,15 +22,14 @@ use App\Http\Controllers\APIParticipantController;
 // });
 
 // For Participant
-Route::post('/participant', [APIParticipantController::class, 'post']);
-Route::get('/participants', [APIParticipantController::class, 'get']);
-Route::get('/participant/{id_participant}', [APIParticipantController::class, 'getById']);
+Route::post('/participant', [ParticipantController::class, 'post']);
+Route::get('/participants', [ParticipantController::class, 'get']);
+Route::get('/participant/{id_participant}', [ParticipantController::class, 'getById']);
 
 // For Absensi
-Route::get('/absensis', [APIAbsensiController::class, 'get']);
-Route::get('/absensi/{id_absensi}', [APIAbsensiController::class, 'getById']);
-Route::put('/absensi/{id_absensi}', [APIAbsensiController::class, 'put']);
+Route::get('/absensis', [AbsensiController::class, 'get']);
+Route::get('/absensi/{id_absensi}', [AbsensiController::class, 'getById']);
+Route::put('/absensi/{id_absensi}', [AbsensiController::class, 'put']);
 
-
-
-
+// For Mahasiswa
+Route::get('/mahasiswa', [MahasiswaController::class, 'get']);
