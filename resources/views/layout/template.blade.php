@@ -22,9 +22,7 @@
     <link rel="stylesheet"
         href="{{ asset('template') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
     <!-- add icon link -->
-    <link rel="icon"
-        href="{{ url('logo/logo-unp.png')}}"
-        type="image/x-icon">
+    <link rel="icon" href="{{ url('logo/logo-unp.png') }}" type="image/x-icon">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('template') }}/dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -39,8 +37,7 @@
   <![endif]-->
 
     <!-- Google Font -->
-    <link rel="stylesheet"
-        href="{{ asset('template') }}/dist/css/googleapis.css">
+    <link rel="stylesheet" href="{{ asset('template') }}/dist/css/googleapis.css">
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -70,18 +67,18 @@
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="{{ asset('template') }}/dist/img/user2-160x160.jpg" class="user-image"
+                                <img src="{{ url('avatar/' . Auth::user()->avatar) }}" class="user-image"
                                     alt="User Image">
-                                <span class="hidden-xs">Alexander Pierce</span>
+                                    <span class="hidden-xs">{{ Auth::user()->nama }}</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
-                                    <img src="{{ asset('template') }}/dist/img/user2-160x160.jpg" class="img-circle"
-                                        alt="User Image">
+                                    <img src="{{ url('avatar/' . Auth::user()->avatar) }}"
+                                        class="img-circle" alt="User Image">
                                     <p>
-                                        Admin
-                                        <small>122</small>
+                                        {{ Auth::user()->nama }}
+                                        <small>{{ Auth::user()->username }}</small>
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->
@@ -90,7 +87,11 @@
                                         <a href="#" class="btn btn-default btn-flat">Profile</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            class="d-none">
+                                            @csrf
+                                            <button type="submit" class="btn btn-default btn-flat">Log out</button>
+                                        </form>
                                     </div>
                                 </li>
                             </ul>
@@ -109,12 +110,12 @@
                 <!-- Sidebar user panel -->
                 <div class="user-panel">
                     <div class="pull-left image">
-                        <img src="{{ asset('template') }}/dist/img/user2-160x160.jpg" class="img-circle"
+                        <img src="{{ url('avatar/' . Auth::user()->avatar) }}" class="img-circle"
                             alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p>Alexander Pierce</p>
-                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                        <p>{{ Auth::user()->nama }}</p>
+                        <a href="#"><i class="fa fa-circle text-success"></i> {{ Auth::user()->level }}</a>
                     </div>
                 </div>
 
@@ -152,10 +153,9 @@
 
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <b>Version</b> 2.4.18
+                <b>Version</b> 1.0.15
             </div>
-            <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE</a>.</strong> All rights
-            reserved.
+            <strong>Copyright &copy; 2021 <a href="https://github.com/panggarron">Ahmad Imam (16076040)</a>.</strong> Pendidikan Teknik Informatika & Komputer
         </footer>
     </div>
     <!-- ./wrapper -->
@@ -184,7 +184,6 @@
         $(document).ready(function() {
             $('.sidebar-menu').tree()
         })
-
     </script>
 
     <script>
@@ -197,7 +196,6 @@
                 responsive: true,
             });
         });
-
     </script>
 
     <script>
@@ -210,7 +208,6 @@
                 responsive: true,
             });
         });
-
     </script>
 
     <script>
@@ -223,7 +220,6 @@
                 responsive: true,
             });
         });
-
     </script>
 
     <script>
@@ -231,7 +227,6 @@
         $(function() {
             $("#lihat_mahasiswa").dataTable();
         });
-
     </script>
 
     <script>

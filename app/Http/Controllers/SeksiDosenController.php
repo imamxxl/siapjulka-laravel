@@ -11,9 +11,14 @@ use App\Models\Seksi;
 use App\Models\Jurusan;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class SeksiDosenController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     function index()
     {
@@ -22,14 +27,16 @@ class SeksiDosenController extends Controller
             ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
             ->where('seksis.status', '1')
             // 5332 akan diganti dengan Middleware User Dosen yang login
-            ->where('seksis.kode_dosen', '5322')
+            // ->where('seksis.kode_dosen', '5322')
+            ->where('seksis.kode_dosen', Auth::user()->username )
             ->get();
 
         // get Dosen
         $dosen = DB::table('dosens')
             ->join('users', 'dosens.user_id', '=', 'users.id')
             ->where('status', '1')
-            ->where('kode_dosen', '5322')
+            // ->where('kode_dosen', '5322')
+            ->where('kode_dosen', Auth::user()->username )
             ->get();
 
         // get jam mulai
@@ -73,7 +80,7 @@ class SeksiDosenController extends Controller
             ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
             ->where('seksis.status', '0')
             // 5332 akan diganti dengan Middleware User Dosen yang login
-            ->where('seksis.kode_dosen', '5322')
+            ->where('seksis.kode_dosen', Auth::user()->username )
             ->get();
 
         return view('dosen.seksi.seksi_dosen_nonaktif', compact('seksi'));

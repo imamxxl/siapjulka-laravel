@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class MatakuliahController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     function index(Request $request)
     {
         $opsi_jurusan = [

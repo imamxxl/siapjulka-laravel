@@ -15,6 +15,11 @@ use Intervention\Image\Facades\Image as Image;
 
 class MahasiswaController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     function index(Request $request)
     {
 

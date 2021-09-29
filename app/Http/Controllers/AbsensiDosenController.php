@@ -15,24 +15,29 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Stmt\TryCatch;
 
 class AbsensiDosenController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     function index(Request $request)
     {
 
         $cek_seksi = Seksi::all()->where('status', '1')
-            // 5332 akan diganti dengan Middleware User Dosen yang login
-            ->where('kode_dosen', '5322')
+            ->where('kode_dosen', Auth::user()->username )
             ->count();
 
         $seksi = DB::table('seksis')
             ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
             ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
             ->where('seksis.status', '1')
-            // 5332 akan diganti dengan Middleware User Dosen yang login
-            ->where('seksis.kode_dosen', '5322')
+            ->where('seksis.kode_dosen', Auth::user()->username )
             ->get();
 
         $participant = DB::table('participants')
@@ -923,8 +928,6 @@ class AbsensiDosenController extends Controller
                 ->where('keterangan', null)
                 ->count();
         }
-
-        // dd($get_ket_alfa);
 
         return view('dosen.print.print_absensi_persemester', compact(
             'absensis',

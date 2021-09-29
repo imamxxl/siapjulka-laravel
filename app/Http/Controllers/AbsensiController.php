@@ -19,6 +19,11 @@ use PhpParser\Node\Stmt\TryCatch;
 
 class AbsensiController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     function index(Request $request)
     {
 

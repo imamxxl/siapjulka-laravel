@@ -13,6 +13,11 @@ use Intervention\Image\Facades\Image as Image;
 
 class DosenController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     function index(Request $request)
     {
         $dosen = DB::table('users')

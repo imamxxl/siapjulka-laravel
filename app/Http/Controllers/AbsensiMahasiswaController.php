@@ -9,19 +9,24 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
 
 class AbsensiMahasiswaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     function index(Request $request)
     {
         $cek_seksi = DB::table('seksis')
             ->join('participants', 'participants.id_seksi', '=', 'seksis.id')
             ->where('status', '1')
-            // 1 akan diganti dengan Middleware User Mahasiswa yang login
-            ->where('user_id', '1')
+            ->where('user_id', Auth::user()->id )
             ->count();
 
         $seksi = DB::table('seksis')
@@ -29,8 +34,7 @@ class AbsensiMahasiswaController extends Controller
             ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
             ->join('participants', 'participants.id_seksi', '=', 'seksis.id')
             ->where('seksis.status', '1')
-            // 5332 akan diganti dengan Middleware User Mahasiswa yang login
-            ->where('participants.user_id', '1')
+            ->where('participants.user_id', Auth::user()->id )
             ->get();
 
         $participant = DB::table('participants')
@@ -135,8 +139,7 @@ class AbsensiMahasiswaController extends Controller
             $get_keterangan[] = DB::table('absensis')
                 ->where('absensis.id_seksi', $id)
                 ->where('absensis.id_pertemuan', '=', $deteksi_pertemuan[$i])
-                // 1 akan diganti dengan Middleware User Mahasiswa yang login
-                ->where('absensis.id_user', '1')
+                ->where('absensis.id_user', Auth::user()->id)
                 ->value('keterangan');
         }
 
@@ -197,7 +200,7 @@ class AbsensiMahasiswaController extends Controller
             ->where('absensis.id_seksi', $id_seksi)
             ->where('absensis.id_pertemuan', $id_pertemuan)
             // 1 akan diganti dengan Middleware User Mahasiswa yang login
-            ->where('id_user', '1')
+            ->where('id_user', Auth::user()->id )
             ->get();
 
         // mendapatkan kode_seksi dari database
@@ -281,7 +284,7 @@ class AbsensiMahasiswaController extends Controller
             ->where('absensis.id_seksi', $id_seksi)
             ->where('absensis.id_pertemuan', $id_pertemuan)
             ->where('verifikasi', '=', '1')
-            ->orderBy('nama', 'ASC')
+            ->where('id_user', Auth::user()->id)
             ->get();
 
         // mendapatkan kode_seksi dari database
@@ -294,6 +297,7 @@ class AbsensiMahasiswaController extends Controller
             ->where('keterangan', 'hadir')
             ->where('absensis.id_seksi', $id_seksi)
             ->where('absensis.id_pertemuan', $id_pertemuan)
+            ->where('id_user', Auth::user()->id)
             ->where('verifikasi', '=', '1')
             ->count();
 
@@ -302,6 +306,7 @@ class AbsensiMahasiswaController extends Controller
             ->where('keterangan', 'izin')
             ->where('absensis.id_seksi', $id_seksi)
             ->where('absensis.id_pertemuan', $id_pertemuan)
+            ->where('id_user', Auth::user()->id)
             ->where('verifikasi', '=', '1')
             ->count();
 
@@ -310,6 +315,7 @@ class AbsensiMahasiswaController extends Controller
             ->where('keterangan', null)
             ->where('absensis.id_seksi', $id_seksi)
             ->where('absensis.id_pertemuan', $id_pertemuan)
+            ->where('id_user', Auth::user()->id)
             ->where('verifikasi', '=', '1')
             ->count();
 
@@ -317,6 +323,7 @@ class AbsensiMahasiswaController extends Controller
         $hitung_semua_peserta = DB::table('absensis')
             ->where('absensis.id_seksi', $id_seksi)
             ->where('absensis.id_pertemuan', $id_pertemuan)
+            ->where('id_user', Auth::user()->id)
             ->where('verifikasi', '=', '1')
             ->count();
 
@@ -416,7 +423,7 @@ class AbsensiMahasiswaController extends Controller
         $participant = DB::table('participants')
             ->join('users', 'participants.user_id', '=', 'users.id')
             ->where('id_seksi', $id_seksi)
-            ->orderBy('nama', 'ASC')
+            ->where('user_id', Auth::user()->id)
             ->get();
 
         // table participant

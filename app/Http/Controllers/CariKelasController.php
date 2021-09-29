@@ -6,9 +6,15 @@ use App\Models\Participant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class CariKelasController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     function index()
     {
         return view('mahasiswa.search.kelas');
@@ -57,7 +63,7 @@ class CariKelasController extends Controller
         }
 
         $user = DB::table('users')
-            ->where('id', '1')
+            ->where('id', Auth::user()->id)
             ->get();
 
         // mengirim data pegawai ke view index
@@ -95,9 +101,9 @@ class CariKelasController extends Controller
         $imei = $request->imei;
 
         $hasil_request = DB::table('participants')
-           ->where('id_seksi', '=', $id_seksi)
-           ->where('user_id', '=', $user_id)
-           ->count();
+            ->where('id_seksi', '=', $id_seksi)
+            ->where('user_id', '=', $user_id)
+            ->count();
 
         if ($hasil_request == 0) {
             $data = [
@@ -110,7 +116,7 @@ class CariKelasController extends Controller
             ];
 
             Participant::create($data);
-            
+
             return redirect('/cari_kelas')->with('pesan-sukses', 'Selamat, anda berhasil bergabung.');
         } else {
             return redirect()

@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Validator;
 
 class JurusanController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     function index(Request $request)
     {
         $jurusan = Jurusan::all()->where('status', '1');

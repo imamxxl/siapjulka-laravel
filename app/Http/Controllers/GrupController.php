@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Validator;
 
 class GrupController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(Request $request)
     {
         $grup = Grup::all()->where('status', '1');

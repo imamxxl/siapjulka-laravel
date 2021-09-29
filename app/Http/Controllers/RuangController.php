@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Validator;
 
 class RuangController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     function index(Request $request)
     {
         $ruang = Ruang::all()->where('status', '1');

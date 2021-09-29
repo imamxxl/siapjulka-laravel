@@ -19,6 +19,11 @@ use League\CommonMark\Block\Element\Document;
 
 class SeksiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     function index(Request $request)
     {
         // $seksi = Seksi::all()->where('status', '1'); // jika menggunakan eloquent

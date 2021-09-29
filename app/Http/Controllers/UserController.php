@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     function index(Request $request)
     {
         $user = User::orderBy('nama', 'ASC')->where('status', '1')->get();
