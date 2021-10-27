@@ -14,10 +14,12 @@ class UserController extends Controller
 {
     function get()
     {
-        $data = User::all();
-        return response()->json(
-            $data
-        );
+        $user = User::all();
+        return response()->json([
+            "status" => "Ok",
+            "message" => "Data ditemukan",
+            "data" => $user
+        ]);
     }
 
     function show($id)
