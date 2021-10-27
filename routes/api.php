@@ -42,6 +42,8 @@ Route::get('/mahasiswas', [MahasiswaController::class, 'get']);
 
 // For Users
 Route::get('/users', [UserController::class, 'get']);
+Route::get('/user/{id}', [UserController::class, 'show']);
+Route::post('/user/login', [UserController::class, 'login']);
 
 // For Seksis
 Route::get('/seksis', [SeksiController::class, 'get']);
