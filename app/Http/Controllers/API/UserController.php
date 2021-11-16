@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Mahasiswa;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Exception;
 
@@ -14,23 +16,23 @@ class UserController extends Controller
 {
     function get()
     {
-        $user = User::all();
-        return response()->json([
-            "status" => "Ok",
-            "message" => "Data ditemukan",
-            "data" => $user
-        ]);
+        $users = User::all();
+        return response()->json(
+            $users
+        );
     }
 
     function show($id)
     {
-        $user = User::find($id);
+        $user = DB::table('mahasiswas')
+        ->join('jurusans', 'jurusans.kode_jurusan', '=', 'mahasiswas.kode_jurusan')
+        ->join('users', 'users.id', '=', 'mahasiswas.user_id')
+        ->where('user_id', $id)->first();
+        
         if (!empty($user)) {
-            return response()->json([
-                "status" => "ok",
-                'message' => 'User ditemukan',
-                'data' => $user
-            ]);
+            return response()->json(
+                $user
+            );
         } else {
             return response()->json([
                 'message' => 'Tidak dapat menemukan user dengan id ' . $id . ' ',
@@ -54,23 +56,19 @@ class UserController extends Controller
                     'password.min' => 'Password minimal 6 karakter'
                 ]
             );
-
             if ($validator->fails()) {
                 throw new Exception($validator->errors()->first(), 400);
             }
-
             $user = User::where('username', $request->username)->first();
             if ($user == null) {
-                throw new Exception("User " . $request->username . " tidak ditemukan ", 404);
+                throw new Exception("User " . $request->username . " tidak terdaftar di dalam sistem ", 404);
             }
-
             if (!Hash::check($request->password, $user->password)) {
                 throw new Exception("Password tidak valid", 400);
             }
-
-            return response()->json(["status" => "ok", "message" => "Berhasil login", "data" => $user], 200);
+            return response()->json($user, 200);
         } catch (Exception $e) {
-            return response()->json(["status" => "error", "message" => $e->getMessage()], $e->getCode());
+            return response()->json(["status" => "Error", "message" => $e->getMessage()], $e->getCode());
         }
     }
 }

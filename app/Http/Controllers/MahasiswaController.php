@@ -151,7 +151,7 @@ class MahasiswaController extends Controller
         $data_imei_user->imei = null;
         $data_imei_user->save();
 
-        // update imei to null mahaasiswas tabless
+        // update imei to null mahasiswas tables
         Mahasiswa::where('user_id', $id)->update(['imei_mahasiswa' => null]);
 
         return redirect()->route('mahasiswa')->with('pesan-sukses', 'IMEI berhasil direset.');

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Seksi;
 use App\Models\Ruang;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardDosenController extends Controller
 {
@@ -20,14 +21,14 @@ class DashboardDosenController extends Controller
 
         $hitung_seksi = Seksi::where('status', '1')
             // 5332 akan diganti dengan Middleware User Dosen yang login
-            ->where('kode_dosen', '5322')
+            ->where('kode_dosen',  Auth::user()->username)
             ->count();
 
         $hitung_matakuliah = Seksi::select('kode_mk')
             ->groupBy('kode_dosen')
             ->where('status', '1')
             // 5332 akan diganti dengan Middleware User Dosen yang login
-            ->where('kode_dosen', '5322')
+            ->where('kode_dosen',  Auth::user()->username)
             ->count();
 
         $hitung_ruangan = Ruang::where('status', '1')

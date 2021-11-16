@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Seksi;
 use App\Models\Ruang;
 use App\Models\Participant;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardMahasiswaController extends Controller
 {
@@ -19,7 +20,7 @@ class DashboardMahasiswaController extends Controller
     {
         $hitung_user = User::where('status', '1')->count();
 
-        $hitung_seksi = Participant::where('user_id', '1')
+        $hitung_seksi = Participant::where('user_id', Auth::user()->id)
             // 1 akan diganti dengan Middleware User Mahasiswa yang login
             ->count();
 
