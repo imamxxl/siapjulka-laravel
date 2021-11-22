@@ -61,16 +61,23 @@ class ParticipantController extends Controller
         );
     }
 
-    function getById($id_participant)
+    function show($user_id)
     {
-        $data = Participant::where('id_participant', $id_participant)->get();
+        $data = DB::table('seksis')
+            ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
+            ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
+            ->join('participants', 'participants.id_seksi', '=', 'seksis.id')
+            ->where('seksis.status', '1')
+            ->where('participants.user_id', $user_id)
+            ->get();
 
         $count_data = $data->count();
 
         if ($count_data == 0) {
-            return response()->json(
-                "Data tidak ditemukan"
-            );
+            return response()->json([
+                'message' => 'Maaf, data tidak ditemukan',
+                'data' => null
+            ], 404);
         } else {
             return response()->json(
                 $data

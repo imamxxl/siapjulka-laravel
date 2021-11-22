@@ -31,7 +31,7 @@ use App\Models\Mahasiswa;
 // For Participant
 Route::post('/participant', [ParticipantController::class, 'post']);
 Route::get('/participants', [ParticipantController::class, 'get']);
-Route::get('/participant/{id_participant}', [ParticipantController::class, 'getById']);
+Route::get('/participant/{user_id}', [ParticipantController::class, 'show']);
 
 // For Absensi
 Route::get('/absensis', [AbsensiController::class, 'get']);
@@ -57,7 +57,7 @@ Route::get('/seksis/user/{id}', [SeksiController::class, 'show']);
 // For Pertemuans
 Route::get('/pertemuans', [PertemuanController::class, 'get']);
 
-// For Pertemuans
+// For Jurusan
 Route::get('/jurusans', [JurusanController::class, 'get']);
 
 Route::get('/ruangs', [RuangController::class, 'get']);
