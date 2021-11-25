@@ -24,26 +24,6 @@ class SeksiController extends Controller
         );
     }
 
-    function shows(Request $request, $id)
-    {
-        $data = DB::table('participants')
-            ->join('users', 'users.id', '=', 'participants.user_id')
-            ->join('seksis', 'seksis.id', '=', 'participants.id_seksi')
-            ->where('participants.user_id', $id)
-            ->get();
-
-        if (!empty($data)) {
-            return response()->json(
-                $data
-            );
-        } else {
-            return response()->json([
-                'message' => 'Gagal menemukan data',
-                'data' => null
-            ], 404);
-        }
-    }
-
     function show(Request $request, $id)
     {
         try {
@@ -53,7 +33,7 @@ class SeksiController extends Controller
                     "id_seksi" => "required",
                 ],
                 [
-                    'id_seksi.required' => 'User wajib ada',
+                    'id_seksi.required' => 'ID Seksi wajib ada',
                 ]
             );
 
@@ -67,31 +47,28 @@ class SeksiController extends Controller
 
             if ($user == null) {
                 return response()->json([
-                    "status" => 'Gagal',
-                    "message" => "User tidak terdaftar di sistem"
+                    'status' => 'Error',
+                    "message" => "User tidak terdaftar di sistem",
+                    "data" => null
                 ]);
             } else {
                 // memilih pertemuan berdasarkan seksi dan user yg login
-                $deteksi_pertemuan = DB::table('absensis')
-                    ->where('id_seksi', $request->id_seksi)
-                    ->where('id_user', $id)
+                $deteksi_pertemuan = DB::table('seksis')
+                    ->join('matakuliahs', 'matakuliahs.kode_mk', '=', 'seksis.kode_mk')
+                    ->where('id', $request->id_seksi)
                     ->first();
 
-                $pertemuan = DB::table('absensis')
-                    ->join('pertemuans', 'pertemuans.id_pertemuan', '=', 'absensis.id_pertemuan')
-                    ->where('absensis.id_seksi', $request->id_seksi)
-                    ->where('absensis.id_user', $id)
-                    ->get();
-
-                if ($deteksi_pertemuan == null) {
+                if (!empty($deteksi_pertemuan)) {
+                    return response()->json(
+                        $deteksi_pertemuan
+                    );
+                } else {
                     return response()->json([
-                        "status" => 0,
-                        "message" => "Tidak ada pertemuan terdeteksi"
-                    ]);
+                        'status' => 'Error',
+                        'message' => 'Tidak ada seksi atau kelas yang ditemukan',
+                        'data' => null
+                    ], 404);
                 }
-                return response()->json(
-                    $pertemuan
-                );
             }
         } catch (Exception $e) {
             return response()->json(["status" => "Error", "message" => $e->getMessage()], $e->getCode());

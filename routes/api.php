@@ -12,6 +12,7 @@ use App\Http\Controllers\API\PertemuanController;
 use App\Http\Controllers\API\JurusanController;
 use App\Http\Controllers\API\RuangController;
 use App\Models\Mahasiswa;
+use App\Models\Pertemuan;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,10 +53,11 @@ Route::post('/send_deviceid/{id}', [DeviceController::class, 'store']);
 
 // For Seksis
 Route::get('/seksis', [SeksiController::class, 'get']);
-Route::post('/seksi/user/{id}', [SeksiController::class, 'show']);
+Route::post('/seksi/{id}',[SeksiController::class, 'show']);
 
 // For Pertemuans
 Route::get('/pertemuans', [PertemuanController::class, 'get']);
+Route::post('/pertemuan/{id}', [PertemuanController::class, 'show']);
 
 // For Jurusan
 Route::get('/jurusans', [JurusanController::class, 'get']);

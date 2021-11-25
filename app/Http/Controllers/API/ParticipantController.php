@@ -75,6 +75,7 @@ class ParticipantController extends Controller
 
         if ($count_data == 0) {
             return response()->json([
+                'status' => 'Error',
                 'message' => 'Maaf, data tidak ditemukan',
                 'data' => null
             ], 404);

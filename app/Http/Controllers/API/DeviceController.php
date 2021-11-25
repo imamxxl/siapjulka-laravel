@@ -24,8 +24,8 @@ class DeviceController extends Controller
 
         if ($device_check == null) {
             return response()->json([
-                "status" => 0,
-                "message" => "Perangkat belum terdaftar di sistem"
+                "message" => "Perangkat belum terdaftar di sistem",
+                "data" => null
             ]);
         } else {
             return response()->json(
@@ -71,7 +71,7 @@ class DeviceController extends Controller
             return response()->json(["status" => "Sukses", "message" => "Perangkat berhasil didaftarkan"]);
 
         } catch (Exception $e) {
-            return response()->json(["status" => "Gagal", "message" => $e->getMessage()], $e->getCode());
+            return response()->json(["status" => "Error", "message" => $e->getMessage()], $e->getCode());
         }
     }
 }
