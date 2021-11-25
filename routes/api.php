@@ -52,7 +52,7 @@ Route::post('/send_deviceid/{id}', [DeviceController::class, 'store']);
 
 // For Seksis
 Route::get('/seksis', [SeksiController::class, 'get']);
-Route::get('/seksis/user/{id}', [SeksiController::class, 'show']);
+Route::post('/seksi/user/{id}', [SeksiController::class, 'show']);
 
 // For Pertemuans
 Route::get('/pertemuans', [PertemuanController::class, 'get']);
