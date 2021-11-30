@@ -55,7 +55,7 @@ class PertemuanController extends Controller
                     ->first();
 
                 $pertemuan = DB::table('absensis')
-                    ->select('seksis.kode_seksi', 'seksis.kode_jurusan', 'seksis.kode_mk',
+                    ->select('absensis.id_absensi', 'seksis.kode_seksi', 'seksis.kode_jurusan', 'seksis.kode_mk',
                     'seksis.kode_dosen', 'seksis.kode_ruang', 'seksis.hari', 'seksis.jadwal_mulai', 
                     'seksis.jadwal_selesai', 'seksis.status', 'absensis.id_pertemuan', 
                     'absensis.imei_absensi', 'absensis.keterangan', 'absensis.catatan', 'absensis.verifikasi', 

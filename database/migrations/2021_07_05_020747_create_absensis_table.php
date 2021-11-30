@@ -21,7 +21,7 @@ class CreateAbsensisTable extends Migration
             $table->foreign('id_seksi')->references('id')->on('seksis')->onDelete('cascade');
             $table->unsignedBigInteger('id_user')->nullable();
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
-            $table->string('imei_absensi')->unique()->nullable();
+            $table->string('imei_absensi')->nullable();
             $table->string('qrcode')->nullable();
             $table->string('qrcode_image')->nullable();
             $table->string('keterangan')->nullable();

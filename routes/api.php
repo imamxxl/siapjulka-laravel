@@ -37,7 +37,7 @@ Route::get('/participant/{user_id}', [ParticipantController::class, 'show']);
 // For Absensi
 Route::get('/absensis', [AbsensiController::class, 'get']);
 Route::get('/absensi/{id_absensi}', [AbsensiController::class, 'getById']);
-Route::put('/absensi/{id_absensi}', [AbsensiController::class, 'put']);
+Route::post('/absensi', [AbsensiController::class, 'post']);
 
 // For Mahasiswa
 Route::get('/mahasiswas', [MahasiswaController::class, 'get']);

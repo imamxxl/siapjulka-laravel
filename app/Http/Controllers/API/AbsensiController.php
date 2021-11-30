@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Absensi;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class AbsensiController extends Controller
 {
@@ -36,69 +38,101 @@ class AbsensiController extends Controller
         }
     }
 
-    function put($id_absensi, Request $request)
+    function post(Request $request)
     {
-        // get data from client
-        $id_pertemuan = $request->id_pertemuan;
-        $qrcode = $request->qrcode;
-        $imei = $request->imei;
-        $keterangan = $request->keterangan;
-        $updated_at = date('Y-m-d H:i:s');
+        try {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    "id_user" => "required",
+                    "qrcode" => "required",
+                    "device_id" => "required",
+                ],
+                [
+                    'id_user.required' => 'User wajib ada',
+                    'qrcode.required' => 'Wajib ada',
+                    'device_id.required' => 'Device id wajib ada',
+                ]
+            );
 
-        $absensi = Absensi::where('id_absensi', $id_absensi)->first();
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first(), 400);
+            }
 
-        $cek_value_absensi = Absensi::where('id_absensi', $id_absensi)->value('keterangan');
+            $cek_verifikasi = DB::table('absensis')
+                ->where('id_user', $request->id_user)
+                ->where('qrcode', $request->qrcode)
+                ->value('verifikasi');
 
-        $cek_qrcode = DB::table('absensis')
-            ->where('id_absensi', $id_absensi)
-            ->where('qrcode', $qrcode)
-            ->first();
+            $cek_value_absensi = DB::table('absensis')
+                ->where('id_user', $request->id_user)
+                ->where('qrcode', $request->qrcode)
+                ->value('keterangan');
 
-        $cek_imei = DB::table('absensis')
-            ->where('id_absensi', $id_absensi)
-            ->where('qrcode', $qrcode)
-            ->where('imei_absensi', $imei)
-            ->first();
+            $cek_id_absensi = DB::table('absensis')
+                ->where('id_user', $request->id_user)
+                ->where('qrcode', $request->qrcode)
+                ->value('id_absensi');
 
-        if ($cek_value_absensi == null) {
-            if ($absensi) {
-                if ($cek_qrcode) {
-                    if ($cek_imei) {
+            $cek_qrcode = DB::table('absensis')
+                ->where('id_user', $request->id_user)
+                ->where('id_absensi', $cek_id_absensi)
+                ->first();
 
-                        $absensi->keterangan = 'hadir';
-                        $absensi->save();
+            $cek_imei = DB::table('absensis')
+                ->where('id_absensi', $cek_id_absensi)
+                ->where('qrcode', $request->qrcode)
+                ->where('imei_absensi', $request->device_id)
+                ->first();
 
-                        return response()->json(
-                            [
-                                "message" => "Anda telah mengisi kehadiran",
-                                "data" => $absensi
-                            ]
-                        );
-                    } else {
-                        return response()->json(
-                            [
-                                "message" => "Perangkat tidak terdaftar di sistem"
-                            ]
-                        );
+            $absensi = Absensi::where('id_absensi', $cek_id_absensi)->first();
+
+            if ($cek_verifikasi == null) {
+                if ($cek_value_absensi == null) {
+                    if ($cek_qrcode) {
+                        if ($cek_imei) {
+                            $absensi->keterangan = 'hadir';
+                            $absensi->save();
+                            return response()->json(
+                                [
+                                    "status" => "Success",
+                                    "message" => "Anda telah mengisi kehadiran",
+                                    "data" => $absensi
+                                ]
+                            );
+                        } else {
+                            return response()->json(
+                                [
+                                    "status" => "Error",
+                                    "message" => "Perangkat tidak memiliki izin atau belum terdaftar"
+                                ]
+                            );
+                        }
                     }
+                    return response()->json(
+                        [
+                            "status" => "Error",
+                            "message" => "QR Code tidak ditemukan"
+                        ]
+                    );
                 }
                 return response()->json(
                     [
-                        "message" => "QR Code tidak ditemukan"
+                        "status" => "Error",
+                        "message" => "Anda sudah melakukan absensi. Absensi hanya dapat dilakukan satu kali."
+                    ]
+                );
+            } else {
+                return response()->json(
+                    [
+                        "status" => "Error",
+                        "message" => "Absensi sudah kadaluarsa. Anda tidak dapat melakukan absensi lagi."
                     ]
                 );
             }
-            return response()->json(
-                [
-                    "message" => "Gagal mengirim data. data tidak dikenal"
-                ]
-            );
+            
+        } catch (Exception $e) {
+            return response()->json(["status" => "Error", "message" => $e->getMessage(), "data" => null], $e->getCode(), );
         }
-        return response()->json(
-            [
-                "message" => "Anda sudah melakukan absensi. Absensi hanya dapat dilakukan satu kali."
-            ]
-        );
-        
     }
 }

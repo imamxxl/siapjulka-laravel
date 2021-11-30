@@ -24,6 +24,7 @@ class DeviceController extends Controller
 
         if ($device_check == null) {
             return response()->json([
+                "status" => "Error",
                 "message" => "Perangkat belum terdaftar di sistem",
                 "data" => null
             ]);
@@ -40,10 +41,11 @@ class DeviceController extends Controller
             $validator = Validator::make(
                 $request->all(),
                 [
-                    "imei" => "required",
+                    "imei" => "required|unique:users",
                 ],
                 [
                     'imei.required' => 'Imei wajib ada',
+                    'imei.unique' => 'Perangkat ini sudah digunakan oleh Mahasiswa lain.',
                 ]
             );
 
@@ -68,7 +70,7 @@ class DeviceController extends Controller
               ->update(['imei_mahasiswa' => $request->imei]);
             
               // return data
-            return response()->json(["status" => "Sukses", "message" => "Perangkat berhasil didaftarkan"]);
+            return response()->json(["status" => "Succes", "message" => "Perangkat berhasil didaftarkan"]);
 
         } catch (Exception $e) {
             return response()->json(["status" => "Error", "message" => $e->getMessage()], $e->getCode());
