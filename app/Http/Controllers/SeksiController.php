@@ -32,6 +32,7 @@ class SeksiController extends Controller
             ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
             ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
             ->where('seksis.status', '1')
+            ->orderBy('id', 'DESC')
             ->get();
 
         //get tahun

@@ -68,7 +68,9 @@ class ParticipantController extends Controller
             ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
             ->join('participants', 'participants.id_seksi', '=', 'seksis.id')
             ->where('seksis.status', '1')
+            ->where('participants.keterangan', '1')
             ->where('participants.user_id', $user_id)
+            ->orderBy('id', 'DESC')
             ->get();
 
         $count_data = $data->count();

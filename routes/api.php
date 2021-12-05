@@ -11,6 +11,8 @@ use App\Http\Controllers\API\SeksiController;
 use App\Http\Controllers\API\PertemuanController;
 use App\Http\Controllers\API\JurusanController;
 use App\Http\Controllers\API\RuangController;
+use App\Http\Controllers\API\CariKelasController;
+use App\Http\Controllers\API\LaporanController;
 use App\Models\Mahasiswa;
 use App\Models\Pertemuan;
 
@@ -47,6 +49,10 @@ Route::get('/users', [UserController::class, 'get']);
 Route::get('/user/{id}', [UserController::class, 'show']);
 Route::post('/login', [UserController::class, 'login']);
 
+// For Search Class
+Route::post('/cari_kelas', [CariKelasController::class, 'get']);
+Route::post('/join_kelas', [CariKelasController::class, 'post']);
+
 // For Device Users
 Route::get('/device/{id}', [DeviceController::class, 'show']);
 Route::post('/send_deviceid/{id}', [DeviceController::class, 'store']);
@@ -59,7 +65,9 @@ Route::post('/seksi/{id}',[SeksiController::class, 'show']);
 Route::get('/pertemuans', [PertemuanController::class, 'get']);
 Route::post('/pertemuan/{id}', [PertemuanController::class, 'show']);
 
-// For Jurusan
-Route::get('/jurusans', [JurusanController::class, 'get']);
+// For Laporan
+Route::post('/detail_laporan/{id}', [LaporanController::class, 'show']);
 
-Route::get('/ruangs', [RuangController::class, 'get']);
+// // For Jurusan
+// Route::get('/jurusans', [JurusanController::class, 'get']);
+// Route::get('/ruangs', [RuangController::class, 'get']);

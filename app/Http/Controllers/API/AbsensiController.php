@@ -104,7 +104,7 @@ class AbsensiController extends Controller
                             return response()->json(
                                 [
                                     "status" => "Error",
-                                    "message" => "Perangkat tidak memiliki izin atau belum terdaftar"
+                                    "message" => "Perangkat tidak terdaftar"
                                 ]
                             );
                         }
@@ -112,7 +112,7 @@ class AbsensiController extends Controller
                     return response()->json(
                         [
                             "status" => "Error",
-                            "message" => "QR Code tidak ditemukan"
+                            "message" => "QR Code tidak cocok"
                         ]
                     );
                 }
@@ -126,7 +126,7 @@ class AbsensiController extends Controller
                 return response()->json(
                     [
                         "status" => "Error",
-                        "message" => "Absensi sudah kadaluarsa. Anda tidak dapat melakukan absensi lagi."
+                        "message" => "Absensi sudah ditutup. Anda tidak dapat melakukan absensi lagi."
                     ]
                 );
             }
