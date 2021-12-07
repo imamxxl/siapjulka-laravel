@@ -9,12 +9,8 @@ use App\Http\Controllers\API\MahasiswaController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\SeksiController;
 use App\Http\Controllers\API\PertemuanController;
-use App\Http\Controllers\API\JurusanController;
-use App\Http\Controllers\API\RuangController;
 use App\Http\Controllers\API\CariKelasController;
 use App\Http\Controllers\API\LaporanController;
-use App\Models\Mahasiswa;
-use App\Models\Pertemuan;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +44,7 @@ Route::get('/mahasiswas', [MahasiswaController::class, 'get']);
 Route::get('/users', [UserController::class, 'get']);
 Route::get('/user/{id}', [UserController::class, 'show']);
 Route::post('/login', [UserController::class, 'login']);
+Route::post('/change_password/{id}', [UserController::class, 'changePassword']);
 
 // For Search Class
 Route::post('/cari_kelas', [CariKelasController::class, 'get']);

@@ -12,7 +12,7 @@ class Seksi extends Model
     protected $fillable = [
         'id',
         'kode_seksi',
-        'password',
+        'token',
         'kode_jurusan',
         'kode_mk',
         'kode_dosen',

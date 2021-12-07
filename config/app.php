@@ -163,6 +163,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -232,6 +233,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'DataTables'  =>  Yajra\DataTables\Facades\DataTables::class,
         'Image' => Intervention\Image\Facades\Image::class,
-        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class 
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 ];

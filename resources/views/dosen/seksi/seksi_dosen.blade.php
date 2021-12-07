@@ -311,6 +311,91 @@
                         <!-- /.modal -->
                     </div>
 
+                    <!-- Modal Import Excel -->
+                    <div class="modal modal-success" id="modal-import-excel">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="/import_excel_dosen" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="text-center modal-title">Import Data Excel</h4>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div>
+                                            <p><b>Perhatian : </b></p>
+                                        </div>
+                                        <p> - Download panduan import data excel terlebih dahulu. </p>
+
+                                        <p> - Isi kode dosen dengan kode Dosen Anda sendiri. </p>
+
+                                        <p> - Tidak boleh ada kolom yang kosong saat menginputkan data seksi melalui excel.
+                                        </p>
+                                        <p> - Data akan gagal diinput jika terdapat kode seksi yang sama. </p>
+
+                                        <p> - Silahkan download template excel untuk contoh inputan data. </p>
+
+                                        <p> - Kosongkan terlebih dahulu data pada template. (karna data tersebut hanya sebagai contoh) </p>
+
+                                        <div>
+                                            <p><b>Pilih File Excel : </b></p>
+                                        </div>
+
+                                        <input type="file" name="file" class="form-control">
+
+                                        <P><br></P>
+
+                                        @if (count($errors) > 0)
+                                            <div class="row">
+                                                <div class="col-md-10 col-md-offset-1">
+                                                    <div class="alert alert-warning alert-dismissible">
+                                                        <button type="button" class="close" data-dismiss="alert"
+                                                            aria-hidden="true">×</button>
+                                                        <h4><i class="icon fa fa-ban"></i> Gagal</h4>
+                                                        @foreach ($errors->all() as $error)
+                                                            {{ $error }} <br>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        @if (Session::has('success'))
+                                            <div class="row">
+                                                <div class="col-md-10 col-md-offset-1">
+                                                    <div class="alert alert-success alert-dismissible">
+                                                        <button type="button" class="close" data-dismiss="alert"
+                                                            aria-hidden="true">×</button>
+                                                        <h5>{!! Session::get('berhasil') !!}</h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">
+                                            Batal</button>
+
+                                        <a href="/seksi_dosen/download_panduan" class="btn btn-outline fa fa-download"> Unduh
+                                            Panduan</a>
+
+                                        <a href="/seksi_dosen/download_excel" class="btn btn-outline fa fa-download"> Unduh
+                                            Template</a>
+                                        <button class="btn btn-outline"> Import</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
+
                     <!-- Modal Edit -->
                     @foreach ($seksi as $data)
                         <div class="modal fade" id="modal-edit{{ $data->kode_seksi }}">
@@ -560,29 +645,6 @@
                         </div>
                         <!-- /.modal -->
                     @endforeach
-
-                    <!-- Modal Import Excel -->
-                    <div class="modal fade" id="modal-import-excel">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <h4 class="text-center modal-title">Import Data Excel</h4>
-                                </div>
-
-                                <div class="modal-body">
-                                    <div class="alert alert-success">
-                                        <h4><i class="icon fa fa-info"></i> Mohon Maaf </h4>
-                                        <p>Fitur "Import Data Excel" masih dalam pengembangan.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.modal-dialog -->
-                        </div>
-                        <!-- /.modal -->
-                    </div>
 
                     <!-- /.box-body -->
                 </div>

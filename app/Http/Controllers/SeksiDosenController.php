@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Matakuliah;
 use App\Models\Ruang;
 use App\Models\Participant;
 use App\Models\Seksi;
@@ -12,6 +11,9 @@ use App\Models\Jurusan;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
+use App\Imports\SeksisImport;
 
 class SeksiDosenController extends Controller
 {
@@ -28,7 +30,7 @@ class SeksiDosenController extends Controller
             ->where('seksis.status', '1')
             // 5332 akan diganti dengan Middleware User Dosen yang login
             // ->where('seksis.kode_dosen', '5322')
-            ->where('seksis.kode_dosen', Auth::user()->username )
+            ->where('seksis.kode_dosen', Auth::user()->username)
             ->get();
 
         // get Dosen
@@ -36,7 +38,7 @@ class SeksiDosenController extends Controller
             ->join('users', 'dosens.user_id', '=', 'users.id')
             ->where('status', '1')
             // ->where('kode_dosen', '5322')
-            ->where('kode_dosen', Auth::user()->username )
+            ->where('kode_dosen', Auth::user()->username)
             ->get();
 
         // get jam mulai
@@ -80,7 +82,7 @@ class SeksiDosenController extends Controller
             ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
             ->where('seksis.status', '0')
             // 5332 akan diganti dengan Middleware User Dosen yang login
-            ->where('seksis.kode_dosen', Auth::user()->username )
+            ->where('seksis.kode_dosen', Auth::user()->username)
             ->get();
 
         return view('dosen.seksi.seksi_dosen_nonaktif', compact('seksi'));
@@ -169,6 +171,61 @@ class SeksiDosenController extends Controller
         $seksi->save();
 
         return redirect()->route('seksi_dosen')->with('pesan-sukses', 'Data seksi berhasil diinput.');
+    }
+
+    public function importExcel(Request $request)
+    {
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'file' => 'required|mimes:xlsx,xls'
+            ],
+            [
+                'file.required' => 'Tidak ada file yang dipilih!',
+                'file.mimes' => 'Format tidak sesuai. Silahkan pilih file dengan format .xlsx/.xls.',
+            ],
+        );
+
+        if ($validator->fails()) {
+            return redirect('/seksi_dosen')
+                ->withErrors($validator)
+                ->withInput()
+                ->with('pesan-gagal', 'Excel gagal diimport. Mohon cek kembali file yang ingin diimport!');
+        }
+
+        // menangkap file excel
+        $file = $request->file('file');
+
+        // membuat nama file unik
+        $nama_file = rand() . $file->getClientOriginalName();
+
+        // upload ke folder file_siswa di dalam folder public
+        $path = $file->move('import', $nama_file);
+
+        // import data
+        $import = Excel::import(new SeksisImport, public_path('/import/' . $nama_file));
+
+        //remove from server
+        Storage::delete($path);
+
+        if ($import) {
+            //redirect
+            return back()->with(['pesan-sukses' => 'Data Excel berhasil diimport.']);
+        } else {
+            //redirect
+            return back()->with(['pesan-gagal' => 'Data Excel Gagal Diimport!']);
+        }
+    }
+
+    public function downloadExcel()
+    {
+        return Storage::download('public/download_excel/contoh_template_input_data.xlsx');
+    }
+
+    public function downloadPanduan()
+    {
+        return Storage::download('public/download_excel/panduan_import_excel_dosen.xlsx');
     }
 
     function addParticipant(Request $request)

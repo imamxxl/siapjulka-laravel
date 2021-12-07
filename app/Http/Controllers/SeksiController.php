@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Dosen;
 use App\Models\Jurusan;
 use App\Models\Matakuliah;
 use App\Models\Ruang;
 use App\Models\Seksi;
 use App\Models\Participant;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Carbon;
-use League\CommonMark\Block\Element\Document;
+use Illuminate\Http\Request;
+use App\Imports\SeksisImport;
+use Illuminate\Contracts\Session\Session as SessionSession;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
+use Session;
 
 class SeksiController extends Controller
 {
@@ -316,6 +317,63 @@ class SeksiController extends Controller
         $seksi->save();
 
         return redirect()->route('seksi')->with('pesan-sukses', 'Data seksi Elektronika berhasil ditambahkan.');
+    }
+
+    public function importExcel(Request $request)
+    {
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'file' => 'required|mimes:xlsx,xls'
+            ],
+            [
+                'file.required' => 'Tidak ada file yang dipilih!',
+                'file.mimes' => 'Format tidak sesuai. Silahkan pilih file dengan format .xlsx/.xls.',
+            ],
+        );
+
+        if ($validator->fails()) {
+            return redirect('/seksi')
+                ->withErrors($validator)
+                ->withInput()
+                ->with('pesan-gagal', 'Excel gagal diimport. Mohon cek kembali file yang ingin diimport!');
+        }
+
+        // menangkap file excel
+        $file = $request->file('file');
+
+        // membuat nama file unik
+        $nama_file = rand() . $file->getClientOriginalName();
+
+        // upload ke folder file_siswa di dalam folder public
+        
+        $path = $file->move('import', $nama_file);
+
+        // import data
+        $import = Excel::import(new SeksisImport, public_path('/import/' . $nama_file));
+
+        //remove from server
+        Storage::delete($path);
+
+        if($import) {
+            //redirect
+            return redirect()->route('seksi')->with(['pesan-sukses' => 'Data Excel berhasil diimport.']);
+        } else {
+            //redirect
+            return redirect()->route('seksi')->with(['pesan-gagal' => 'Data  Gagal Diimport!']);
+        }
+        // return redirect()->route('seksi')->with('pesan-sukses', 'Data Excel berhasil diimport.');
+    }
+
+    public function downloadExcel()
+    {
+        return Storage::download('public/download_excel/contoh_template_input_data.xlsx');
+    }
+
+    public function downloadPanduan()
+    {
+        return Storage::download('public/download_excel/panduan_import_excel.xlsx');
     }
 
     function detail(Request $request, $id)

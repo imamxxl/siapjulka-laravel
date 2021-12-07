@@ -117,6 +117,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/seksi/add/insert_ptik', [SeksiController::class, 'insertPTIK']);
         Route::post('/seksi/add/insert_pte', [SeksiController::class, 'insertPTE']);
         Route::post('/seksi/add/insert_d3te', [SeksiController::class, 'insertD3TE']);
+        Route::post('/import_excel', [SeksiController::class, 'importExcel']);
+        Route::get('/seksi/download_excel', [SeksiController::class, 'downloadExcel']);
+        Route::get('/seksi/download_panduan', [SeksiController::class, 'downloadPanduan']);
         Route::get('/seksi/detail/{id}', [SeksiController::class, 'detail']);
         Route::post('/seksi/detail/add_participant/', [SeksiController::class, 'addParticipant']);
         Route::get('/seksi/hapus_peserta/{id_participant}', [SeksiController::class, 'deleteParticipant']);
@@ -151,6 +154,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/seksi_dosen', [SeksiDosenController::class, 'index'])->name('seksi_dosen');
         Route::get('/seksi_dosen/nonaktif', [SeksiDosenController::class, 'indexNonaktif'])->name('seksi_dosen_nonaktif');
         Route::post('/seksi_dosen/insert_seksi', [SeksiDosenController::class, 'insertSeksi']);
+        Route::post('/import_excel_dosen', [SeksiDosenController::class, 'importExcel']);
+        Route::get('/seksi_dosen/download_excel', [SeksiDosenController::class, 'downloadExcel']);
+        Route::get('/seksi_dosen/download_panduan', [SeksiDosenController::class, 'downloadPanduan']);
         Route::get('/seksi_dosen/detail/{id}', [SeksiDosenController::class, 'detail']);
         Route::post('/seksi_dosen/detail/add_participant/', [SeksiDosenController::class, 'addParticipant']);
         Route::get('/seksi_dosen/hapus_peserta/{id_participant}', [SeksiDosenController::class, 'deleteParticipant']);

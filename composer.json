@@ -17,6 +17,7 @@
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.3",
+        "maatwebsite/excel": "^3.1",
         "simplesoftwareio/simple-qrcode": "~4",
         "yajra/laravel-datatables-oracle": "^9.17"
     },

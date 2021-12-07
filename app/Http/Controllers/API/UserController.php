@@ -25,10 +25,10 @@ class UserController extends Controller
     function show($id)
     {
         $user = DB::table('mahasiswas')
-        ->join('jurusans', 'jurusans.kode_jurusan', '=', 'mahasiswas.kode_jurusan')
-        ->join('users', 'users.id', '=', 'mahasiswas.user_id')
-        ->where('user_id', $id)->first();
-        
+            ->join('jurusans', 'jurusans.kode_jurusan', '=', 'mahasiswas.kode_jurusan')
+            ->join('users', 'users.id', '=', 'mahasiswas.user_id')
+            ->where('user_id', $id)->first();
+
         if (!empty($user)) {
             return response()->json(
                 $user
@@ -67,6 +67,46 @@ class UserController extends Controller
                 throw new Exception("Password tidak valid", 400);
             }
             return response()->json($user, 200);
+        } catch (Exception $e) {
+            return response()->json(["status" => "Error", "message" => $e->getMessage()], $e->getCode());
+        }
+    }
+
+    function changePassword(Request $request, $id)
+    {
+        try {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    "new_password" => "required|min:6",
+                ],
+                [
+                    'new_password.required' => 'Password wajib diisi',
+                    'new_password.min' => 'Password minimal 6 karakter'
+                ]
+            );
+
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first(), 400);
+            }
+
+            // create updated_at
+            $updated_at = date('Y-m-d H:i:s');
+
+            $user = User::find($id);
+            // $user->password = $request->password;
+            $user->password = Hash::make($request->new_password);
+            $user->updated_at = $updated_at;
+
+            $user->update();
+
+            return response()->json(
+                [
+                    "status" => "Success",
+                    "message" => "Password berhasil diubah."
+                ]
+            );
+
         } catch (Exception $e) {
             return response()->json(["status" => "Error", "message" => $e->getMessage()], $e->getCode());
         }
