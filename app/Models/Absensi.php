@@ -19,6 +19,7 @@ class Absensi extends Model
         'qrcode',
         'qrcode_image',
         'keterangan',
+        'file',
         'catatan',
         'verifikasi',
         'created_at',

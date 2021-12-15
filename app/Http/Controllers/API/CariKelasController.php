@@ -108,4 +108,53 @@ class CariKelasController extends Controller
             return response()->json(["status" => "Error", "message" => $e->getMessage(), "data" => null], $e->getCode(),);
         }
     }
+
+    function search(Request $request, $id_user)
+    {
+        try {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'clue' => 'required',
+                ],
+                [
+                    'clue.required' => 'Kolom cari harus diisi',
+                ]
+            );
+
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first(), 400);
+            }
+
+            // menangkap data pencarian
+            $clue = $request->clue;
+
+            $count_clue = DB::table('seksis')
+                ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
+                ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
+                ->where('nama_mk', 'like', "%" . $clue . "%")
+                ->orWhere('nama_dosen', 'like', "%" . $clue . "%")
+                ->orWhere('kode_seksi', 'like', "%" . $clue . "%")
+                ->orWhere('hari', 'like', "%" . $clue . "%")
+                ->count();
+
+            // mengambil data dari table pegawai sesuai pencarian data
+            $clue = DB::table('seksis')
+                ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
+                ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
+                ->where('nama_mk', 'like', "%" . $clue . "%")
+                ->orWhere('nama_dosen', 'like', "%" . $clue . "%")
+                ->orWhere('kode_seksi', 'like', "%" . $clue . "%")
+                ->orWhere('hari', 'like', "%" . $clue . "%")
+                ->get();
+
+            if ($count_clue == 0) {
+                return response()->json(["status" => "Gagal", "message" => "Kelas tidak ditemukan.", "data" => null]);
+            } else {
+                return response()->json($clue);
+            }
+        } catch (Exception $e) {
+            return response()->json(["status" => "Error", "message" => $e->getMessage()], $e->getCode());
+        }
+    }
 }

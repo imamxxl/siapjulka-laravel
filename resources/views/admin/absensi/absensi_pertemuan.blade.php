@@ -182,7 +182,8 @@
                                 data-target="#modal-recovery-qrcode">
                                 <i class="fa fa-fw fa-refresh"></i>
                             </button>
-                            <a href="/download/seksi{{ $data->id_seksi }}/qrcode{{ $data->id_pertemuan }}" target="_blank">
+                            <a href="/download/seksi{{ $data->id_seksi }}/qrcode{{ $data->id_pertemuan }}"
+                                target="_blank">
                                 <button class=" btn btn-sm btn-success pull-right"><i class="fa fa-download"></i></button>
                             </a>
                         </div>
@@ -257,6 +258,10 @@
                                             </td>
                                         @endif
 
+                                        {{-- @if ($data->keterangan = izin)
+                                            
+                                        @endif --}}
+
                                         @if ($data->verifikasi == null)
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
@@ -267,6 +272,12 @@
                                                     data-target="#modal-catatan{{ $data->id_absensi }}">
                                                     <i class="fa fa-fw fa-edit"></i>
                                                 </button>
+                                                @if ($data->keterangan == 'izin')
+                                                    <a href="/download/pdf{{ $data->id_absensi }}" target="_blank">
+                                                        <button class=" btn btn-sm btn-warning"><i
+                                                                class="fa fa-download"></i></button>
+                                                    </a>
+                                                @endif
                                                 <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
                                                     data-target="#modal-reset{{ $data->id_absensi }}">
                                                     <i class="fa fa-fw fa-circle-o-notch"></i>
@@ -278,6 +289,12 @@
                                                     data-target="#modal-catatan{{ $data->id_absensi }}">
                                                     <i class="fa fa-fw fa-edit"></i>
                                                 </button>
+                                                @if ($data->keterangan == 'izin')
+                                                    <a href="/download/pdf{{ $data->id_absensi }}" target="_blank">
+                                                        <button class=" btn btn-sm btn-warning"><i
+                                                                class="fa fa-download"></i></button>
+                                                    </a>
+                                                @endif
                                                 <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
                                                     data-target="#modal-reset{{ $data->id_absensi }}">
                                                     <i class="fa fa-fw fa-circle-o-notch"></i>
@@ -457,8 +474,8 @@
                                 <div class="form-group hidden">
                                     <label>Tanggal</label>
                                     <label class="text-danger">*</label>
-                                    <input type="text" name="tanggal" class="form-control" value="{{ $data->tanggal }}"
-                                        readonly>
+                                    <input type="text" name="tanggal" class="form-control"
+                                        value="{{ $data->tanggal }}" readonly>
                                     <div class="text-danger">
                                         @error('tanggal')
                                             {{ $message }}
@@ -496,7 +513,8 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title"> Edit Pertemuan Seksi {{ $data->kode_seksi }} - {{ $item->nama_mk }}
+                        <h4 class="modal-title"> Edit Pertemuan Seksi {{ $data->kode_seksi }} -
+                            {{ $item->nama_mk }}
                         </h4>
                     </div>
                     <form action="/edit/seksi/{{ $data->id_seksi }}/pertemuan/{{ $data->id_pertemuan }}" method="POST"
@@ -510,8 +528,8 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input name="tanggal_picker" type="text" class="form-control pull-right" id="datepicker"
-                                        value="{{ date('m/d/Y', strtotime($tanggal_pertemuan)) }}"
+                                    <input name="tanggal_picker" type="text" class="form-control pull-right"
+                                        id="datepicker" value="{{ date('m/d/Y', strtotime($tanggal_pertemuan)) }}"
                                         placeholder="07/26/2021">
                                 </div>
                                 <div class="text-danger">
@@ -558,7 +576,8 @@
                     <div class="modal-body">
                         <p class="text-danger"><b>Peringatan!!!</b></p>
                         <P> Jika anda telah menghapus data ini, semua data absensi pada pertemuan ini akan dihapus secara
-                            <b> PERMANEN</b>. <br> Perlu diingat!, data yang telah dihapus tidak dapat di kembalikan lagi.</p>
+                            <b> PERMANEN</b>. <br> Perlu diingat!, data yang telah dihapus tidak dapat di kembalikan lagi.
+                        </p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Batal</button>

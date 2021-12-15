@@ -36,6 +36,7 @@ Route::get('/participant/{user_id}', [ParticipantController::class, 'show']);
 Route::get('/absensis', [AbsensiController::class, 'get']);
 Route::get('/absensi/{id_absensi}', [AbsensiController::class, 'getById']);
 Route::post('/absensi', [AbsensiController::class, 'post']);
+Route::post('/izin', [AbsensiController::class, 'upload']);
 
 // For Mahasiswa
 Route::get('/mahasiswas', [MahasiswaController::class, 'get']);
@@ -49,6 +50,7 @@ Route::post('/change_password/{id}', [UserController::class, 'changePassword']);
 // For Search Class
 Route::post('/cari_kelas', [CariKelasController::class, 'get']);
 Route::post('/join_kelas', [CariKelasController::class, 'post']);
+Route::post('/clue/{id_user}', [CariKelasController::class, 'search']);
 
 // For Device Users
 Route::get('/device/{id}', [DeviceController::class, 'show']);
@@ -64,7 +66,3 @@ Route::post('/pertemuan/{id}', [PertemuanController::class, 'show']);
 
 // For Laporan
 Route::post('/detail_laporan/{id}', [LaporanController::class, 'show']);
-
-// // For Jurusan
-// Route::get('/jurusans', [JurusanController::class, 'get']);
-// Route::get('/ruangs', [RuangController::class, 'get']);

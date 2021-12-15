@@ -270,18 +270,6 @@ class AbsensiController extends Controller
                 ->with('pesan-gagal', 'Pertemuan gagal dibuat!');
         }
 
-        // Auth::user()->sent()->create([
-        //     'tel'       => $request->tel,
-        //     'email'    => $request->email,
-        //     'start' => date("Y-m-d", strtotime($request->datepicker)),
-        //     'end'       => date("Y-m-d", strtotime($request->datepicker1)),
-        //     'supervisor'    => $request->supervisor,
-        //     'department' => $request->department,
-        //     'name'    => $request->name,
-        //     'adress' => $request->adress,
-        // ]);   
-        // return view('home');
-
         // insert ke tabel Pertemuans
         $pertemuan = new Pertemuan;
         $pertemuan->id_seksi = $request->kode_seksi;
@@ -498,17 +486,36 @@ class AbsensiController extends Controller
 
     function resetAbsensi($id_absensi)
     {
-        $keterangan_null = null;
-        $catatan_null = null;
-        $verifikasi_null = null;
+        $nama_file = DB::table('absensis')
+            ->where('id_absensi', $id_absensi)
+            ->value('file');
+
+        unlink(storage_path('app/public/documents/' . $nama_file));
 
         $absensi = Absensi::find($id_absensi);
-        $absensi->keterangan = $keterangan_null;
-        $absensi->catatan = $catatan_null;
-        $absensi->verifikasi = $verifikasi_null;
+        $absensi->keterangan = null;
+        $absensi->file = null;
+        $absensi->catatan = null;
+        $absensi->verifikasi = null;
         $absensi->save();
 
         return redirect()->back()->with('pesan-sukses', 'Data absensi berhasil direset.');
+    }
+
+    function downloadPDF($id_absensi)
+    {
+        $file_name = DB::table('absensis')
+            ->where('id_absensi', $id_absensi)
+            ->value('file');
+
+        if ($file_name == null) {
+            return redirect()->back()->with('pesan-gagal', 'Surat izin / bukti izin mahasiswa tidak ada.');
+        }
+
+        $file = Storage::disk('documents')->get($file_name);
+
+        return (new Response($file, 200))
+            ->header('Content-Type', 'application/pdf');
     }
 
     function downloadQRCode($id_seksi, $id_pertemuan)

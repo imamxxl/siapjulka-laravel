@@ -139,6 +139,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/absensi/catatan_absensi/{id_absensi}', [AbsensiController::class, 'catatanAbsensi']);
         Route::get('/absensi/reset_absensi/{id_absensi}', [AbsensiController::class, 'resetAbsensi']);
         Route::get('/download/seksi{id_seksi}/qrcode{id_pertemuan}', [AbsensiController::class, 'downloadQRCode']);
+        Route::get('/download/pdf{id_absensi}', [AbsensiController::class, 'downloadPDF']);
         Route::post('/recovery/qrcode/absensi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiController::class, 'recoveryQRCode']);
         Route::post('/edit/seksi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiController::class, 'editPertemuan']);
         Route::get('/delete/seksi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiController::class, 'deletePertemuan']);

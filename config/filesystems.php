@@ -40,6 +40,11 @@ return [
             'root' => storage_path('app/public/qrcodes'),
         ],
 
+        'documents' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/documents'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

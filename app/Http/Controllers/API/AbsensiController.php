@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Absensi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Exception;
 
 class AbsensiController extends Controller
@@ -130,9 +132,108 @@ class AbsensiController extends Controller
                     ]
                 );
             }
-            
         } catch (Exception $e) {
-            return response()->json(["status" => "Error", "message" => $e->getMessage(), "data" => null], $e->getCode(), );
+            return response()->json(["status" => "Error", "message" => $e->getMessage(), "data" => null], $e->getCode(),);
+        }
+    }
+
+    // jika mengisi kehadiran izin dan harus upload document
+    function upload(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'file' => 'required|mimes:pdf|max:2048',
+                "device_id" => "required",
+                "id_absensi" => "required",
+            ], [
+                'file.required' => 'File harus diupload',
+                'file.mimes' => 'Format tidak sesuai. Silahkan pilih file format PDF',
+                'file.max' => 'Size file dokumen tidak boleh lebih dari 2048KB / 2MB',
+                'device_id.required' => 'Device id wajib ada',
+                'id_absensi.required' => 'Device id wajib ada',
+            ]);
+
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first(), 400);
+            }
+
+            // cek verifikasi absensi
+            $cek_verifikasi = DB::table('absensis')
+                ->where('id_absensi', $request->id_absensi)
+                ->value('verifikasi');
+
+            // cek value absensi
+            $cek_value_absensi = DB::table('absensis')
+                ->where('id_absensi', $request->id_absensi)
+                ->value('keterangan');
+
+            // cek imei user mahasiswa
+            $cek_imei = DB::table('absensis')
+                ->where('id_absensi', $request->id_absensi)
+                ->where('imei_absensi', $request->device_id)
+                ->first();
+
+            // deteksi tanggal
+            $updated_at = date('Y-m-d H:i:s');
+
+            // membuat nama file
+            $rnd_number = random_int(100000, 999999);
+
+            if ($cek_verifikasi == null) {
+                if ($cek_value_absensi == null) {
+                    if ($cek_imei) {
+                        
+                        $file_name = 'surat_izin_mahasiswa_' . $rnd_number . '.pdf';
+
+                        $path = Storage::putFileAs(
+                            'public/documents', $request->file('file'), $file_name
+                        );
+
+                        DB::table('absensis')
+                            ->where('id_absensi', $request->id_absensi)
+                            ->update(
+                                ['keterangan' => 'izin'],
+                            );
+
+                        DB::table('absensis')
+                            ->where('id_absensi', $request->id_absensi)
+                            ->update(
+                                ['file' => $file_name],
+                                ['updated_at' => $updated_at]
+                            );
+
+                        return response()->json([
+                            "status" => "Success",
+                            "message" => "Anda berhasil Mengisi kehadiran dengan keterangan izin",
+                            "data" => $path
+                        ]);
+
+                    } else {
+
+                        return response()->json(
+                            [
+                                "status" => "Error",
+                                "message" => "Perangkat tidak terdaftar di sistem."
+                            ]
+                        );
+                    }
+                }
+                return response()->json(
+                    [
+                        "status" => "Error",
+                        "message" => "Anda sudah melakukan absensi. Absensi hanya dapat dilakukan satu kali."
+                    ]
+                );
+            } else {
+                return response()->json(
+                    [
+                        "status" => "Error",
+                        "message" => "Absensi sudah ditutup. Anda tidak dapat melakukan absensi lagi."
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+            return response()->json(["status" => "Error", "message" => $e->getMessage(), "data" => null], $e->getCode(),);
         }
     }
 }

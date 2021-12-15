@@ -25,6 +25,7 @@ class CreateAbsensisTable extends Migration
             $table->string('qrcode')->nullable();
             $table->string('qrcode_image')->nullable();
             $table->string('keterangan')->nullable();
+            $table->string('file')->nullable();
             $table->longText('catatan')->nullable();
             $table->boolean('verifikasi')->nullable();
             $table->timestamps();
