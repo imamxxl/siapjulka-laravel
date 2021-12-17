@@ -136,7 +136,7 @@
                                             @else
                                                 <td align="center">{{ $get_ket_alfa[$key] }}</td>
                                             @endif
-                                            
+
                                         </tr>
                                     @endforeach
                                 </table>
