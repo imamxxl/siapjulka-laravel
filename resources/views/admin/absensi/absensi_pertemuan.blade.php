@@ -258,10 +258,6 @@
                                             </td>
                                         @endif
 
-                                        {{-- @if ($data->keterangan = izin)
-                                            
-                                        @endif --}}
-
                                         @if ($data->verifikasi == null)
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
