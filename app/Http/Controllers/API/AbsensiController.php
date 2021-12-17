@@ -142,15 +142,17 @@ class AbsensiController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'file' => 'required|mimes:pdf|max:2048',
-                "device_id" => "required",
                 "id_absensi" => "required",
+                "device_id" => "required",
+                'file' => 'required|mimes:pdf|max:2048',
+
+
             ], [
+                'id_absensi.required' => 'Device id wajib ada',
+                'device_id.required' => 'Device id wajib ada',
                 'file.required' => 'File harus diupload',
                 'file.mimes' => 'Format tidak sesuai. Silahkan pilih file format PDF',
                 'file.max' => 'Size file dokumen tidak boleh lebih dari 2048KB / 2MB',
-                'device_id.required' => 'Device id wajib ada',
-                'id_absensi.required' => 'Device id wajib ada',
             ]);
 
             if ($validator->fails()) {
@@ -182,11 +184,11 @@ class AbsensiController extends Controller
             if ($cek_verifikasi == null) {
                 if ($cek_value_absensi == null) {
                     if ($cek_imei) {
-                        
                         $file_name = 'surat_izin_mahasiswa_' . $rnd_number . '.pdf';
-
                         $path = Storage::putFileAs(
-                            'public/documents', $request->file('file'), $file_name
+                            'public/documents',
+                            $request->file('file'),
+                            $file_name
                         );
 
                         DB::table('absensis')
@@ -207,7 +209,6 @@ class AbsensiController extends Controller
                             "message" => "Anda berhasil Mengisi kehadiran dengan keterangan izin",
                             "data" => $path
                         ]);
-
                     } else {
 
                         return response()->json(
