@@ -486,11 +486,18 @@ class AbsensiController extends Controller
 
     function resetAbsensi($id_absensi)
     {
+        $nama_mahasiswa = DB::table('absensis')
+            ->join('users', 'users.id', '=', 'absensis.id_user')
+            ->where('id_absensi', $id_absensi)
+            ->value('users.nama');
+
         $nama_file = DB::table('absensis')
             ->where('id_absensi', $id_absensi)
             ->value('file');
 
-        unlink(storage_path('app/public/documents/' . $nama_file));
+        if ($nama_file != null) {
+            unlink(storage_path('app/public/documents/' . $nama_file));
+        }
 
         $absensi = Absensi::find($id_absensi);
         $absensi->keterangan = null;
@@ -499,7 +506,7 @@ class AbsensiController extends Controller
         $absensi->verifikasi = null;
         $absensi->save();
 
-        return redirect()->back()->with('pesan-sukses', 'Data absensi berhasil direset.');
+        return redirect()->back()->with('pesan-sukses', 'Data absensi ' . $nama_mahasiswa . ' berhasil direset.');
     }
 
     function downloadPDF($id_absensi)
