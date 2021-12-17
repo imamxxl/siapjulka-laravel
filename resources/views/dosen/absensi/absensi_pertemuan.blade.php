@@ -182,7 +182,8 @@
                                 data-target="#modal-recovery-qrcode">
                                 <i class="fa fa-fw fa-refresh"></i>
                             </button>
-                            <a href="/download_dosen/seksi{{ $data->id_seksi }}/qrcode{{ $data->id_pertemuan }}" target="_blank">
+                            <a href="/download_dosen/seksi{{ $data->id_seksi }}/qrcode{{ $data->id_pertemuan }}"
+                                target="_blank">
                                 <button class=" btn btn-sm btn-success pull-right"><i class="fa fa-download"></i></button>
                             </a>
                         </div>
@@ -263,6 +264,12 @@
                                                     data-target="#modal-verifikasi{{ $data->id_absensi }}">
                                                     <i class="fa fa-fw fa-check"></i>
                                                 </button>
+                                                @if ($data->keterangan == 'izin')
+                                                    <a href="/download_dosen/pdf{{ $data->id_absensi }}" target="_blank">
+                                                        <button class=" btn btn-sm btn-warning"><i
+                                                                class="fa fa-download"></i></button>
+                                                    </a>
+                                                @endif
                                                 <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-catatan{{ $data->id_absensi }}">
                                                     <i class="fa fa-fw fa-edit"></i>
@@ -278,6 +285,12 @@
                                                     data-target="#modal-catatan{{ $data->id_absensi }}">
                                                     <i class="fa fa-fw fa-edit"></i>
                                                 </button>
+                                                @if ($data->keterangan == 'izin')
+                                                    <a href="/download_dosen/pdf{{ $data->id_absensi }}" target="_blank">
+                                                        <button class=" btn btn-sm btn-warning"><i
+                                                                class="fa fa-download"></i></button>
+                                                    </a>
+                                                @endif
                                                 <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
                                                     data-target="#modal-reset{{ $data->id_absensi }}">
                                                     <i class="fa fa-fw fa-circle-o-notch"></i>
@@ -406,7 +419,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Batal</button>
-                            <a href="/absensi_dosen/reset_absensi/{{ $data->id_absensi }}" class="btn btn-danger">Reset</a>
+                            <a href="/absensi_dosen/reset_absensi/{{ $data->id_absensi }}"
+                                class="btn btn-danger">Reset</a>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -457,8 +471,8 @@
                                 <div class="form-group hidden">
                                     <label>Tanggal</label>
                                     <label class="text-danger">*</label>
-                                    <input type="text" name="tanggal" class="form-control" value="{{ $data->tanggal }}"
-                                        readonly>
+                                    <input type="text" name="tanggal" class="form-control"
+                                        value="{{ $data->tanggal }}" readonly>
                                     <div class="text-danger">
                                         @error('tanggal')
                                             {{ $message }}
@@ -496,11 +510,12 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title"> Edit Pertemuan Seksi {{ $data->kode_seksi }} - {{ $item->nama_mk }}
+                        <h4 class="modal-title"> Edit Pertemuan Seksi {{ $data->kode_seksi }} -
+                            {{ $item->nama_mk }}
                         </h4>
                     </div>
-                    <form action="/edit_dosen/seksi/{{ $data->id_seksi }}/pertemuan/{{ $data->id_pertemuan }}" method="POST"
-                        enctype="multipart/form-data">
+                    <form action="/edit_dosen/seksi/{{ $data->id_seksi }}/pertemuan/{{ $data->id_pertemuan }}"
+                        method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body">
                             <div class="form-group">
@@ -510,8 +525,8 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input name="tanggal_picker" type="text" class="form-control pull-right" id="datepicker"
-                                        value="{{ date('m/d/Y', strtotime($tanggal_pertemuan)) }}"
+                                    <input name="tanggal_picker" type="text" class="form-control pull-right"
+                                        id="datepicker" value="{{ date('m/d/Y', strtotime($tanggal_pertemuan)) }}"
                                         placeholder="07/26/2021">
                                 </div>
                                 <div class="text-danger">
