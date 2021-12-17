@@ -284,7 +284,7 @@ class AbsensiMahasiswaController extends Controller
             ->where('absensis.id_seksi', $id_seksi)
             ->where('absensis.id_pertemuan', $id_pertemuan)
             ->where('verifikasi', '=', '1')
-            ->where('id_user', Auth::user()->id)
+            ->where('absensis.id_user', Auth::user()->id)
             ->get();
 
         // mendapatkan kode_seksi dari database
@@ -451,6 +451,7 @@ class AbsensiMahasiswaController extends Controller
         $where_participant = DB::table('participants')
             ->join('users', 'participants.user_id', '=', 'users.id')
             ->where('id_seksi', $id_seksi)
+            ->where('user_id', Auth::user()->id)
             ->orderBy('nama', 'ASC')
             ->pluck('user_id');
 
