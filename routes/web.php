@@ -136,6 +136,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/absensi/insert_pertemuan_absensi/', [AbsensiController::class, 'insertPertemuanAbsensi']);
         Route::get('/absensi/detail/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiController::class, 'detailPertemuan']);
         Route::get('/absensi/verifikasi_absensi/{id_absensi}', [AbsensiController::class, 'verifikasiAbsensi']);
+        Route::get('/absensi/verifikasi_all/seksi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiController::class, 'verifikasiAbsensiAll']);
         Route::post('/absensi/catatan_absensi/{id_absensi}', [AbsensiController::class, 'catatanAbsensi']);
         Route::get('/absensi/reset_absensi/{id_absensi}', [AbsensiController::class, 'resetAbsensi']);
         Route::get('/download/seksi{id_seksi}/qrcode{id_pertemuan}', [AbsensiController::class, 'downloadQRCode']);
@@ -174,10 +175,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/absensi_dosen/insert_pertemuan_absensi/', [AbsensiDosenController::class, 'insertPertemuanAbsensi']);
         Route::get('/absensi_dosen/detail/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiDosenController::class, 'detailPertemuan']);
         Route::get('/absensi_dosen/verifikasi_absensi/{id_absensi}', [AbsensiDosenController::class, 'verifikasiAbsensi']);
+        Route::get('/absensi_dosen/verifikasi_all/seksi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiDosenController::class, 'verifikasiAbsensiAll']);
         Route::post('/absensi_dosen/catatan_absensi/{id_absensi}', [AbsensiDosenController::class, 'catatanAbsensi']);
         Route::get('/absensi_dosen/reset_absensi/{id_absensi}', [AbsensiDosenController::class, 'resetAbsensi']);
         Route::get('/download_dosen/seksi{id_seksi}/qrcode{id_pertemuan}', [AbsensiDosenController::class, 'downloadQRCode']);
-        Route::get('/download_dosen/pdf{id_absensi}', [AbsensiController::class, 'downloadPDF']);
+        Route::get('/download_dosen/pdf{id_absensi}', [AbsensiDosenController::class, 'downloadPDF']);
         Route::post('/recovery_dosen/qrcode/absensi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiDosenController::class, 'recoveryQRCode']);
         Route::post('/edit_dosen/seksi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiDosenController::class, 'editPertemuan']);
         Route::get('/delete_dosen/seksi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiDosenController::class, 'deletePertemuan']);

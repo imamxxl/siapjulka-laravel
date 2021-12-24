@@ -687,6 +687,19 @@ class AbsensiDosenController extends Controller
         return redirect($previous)->with(['pesan-gagal' => 'Pertemuan gagal dihapus.']);
     }
 
+    function verifikasiAbsensiAll($id_seksi, $id_pertemuan)
+    {
+
+        DB::table('absensis')
+            ->where('id_seksi', $id_seksi)
+            ->where('id_pertemuan', $id_pertemuan)
+            ->update(
+                ['verifikasi' => '1'],
+            );
+
+        return redirect()->back()->with(['pesan-sukses' => 'Seluruh Absensi mahasiswa sudah berhasil diverifikasi.']);
+    }
+
     function printPertemuan($id_seksi, $id_pertemuan)
     {
         $seksi = Absensi::find($id_seksi);

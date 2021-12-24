@@ -50,7 +50,7 @@ Route::post('/change_password/{id}', [UserController::class, 'changePassword']);
 // For Search Class
 Route::post('/cari_kelas', [CariKelasController::class, 'get']);
 Route::post('/join_kelas', [CariKelasController::class, 'post']);
-Route::post('/clue/{id_user}', [CariKelasController::class, 'search']);
+Route::post('/clue/{user_id}', [CariKelasController::class, 'search']);
 
 // For Device Users
 Route::get('/device/{id}', [DeviceController::class, 'show']);
@@ -59,6 +59,7 @@ Route::post('/send_deviceid/{id}', [DeviceController::class, 'store']);
 // For Seksis
 Route::get('/seksis', [SeksiController::class, 'get']);
 Route::post('/seksi/{id}',[SeksiController::class, 'show']);
+Route::post('/hari/{user_id}',[SeksiController::class, 'where']);
 
 // For Pertemuans
 Route::get('/pertemuans', [PertemuanController::class, 'get']);

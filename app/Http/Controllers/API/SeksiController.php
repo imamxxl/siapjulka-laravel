@@ -74,4 +74,61 @@ class SeksiController extends Controller
             return response()->json(["status" => "Error", "message" => $e->getMessage()], $e->getCode());
         }
     }
+
+    function where(Request $request, $user_id)
+    {
+        try {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    "hari" => "required",
+                ],
+                [
+                    'hari.required' => 'Hari wajib ada',
+                ]
+            );
+
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first(), 400);
+            }
+
+            $hitung_data = DB::table('seksis')
+                ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
+                ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
+                ->join('participants', 'participants.id_seksi', '=', 'seksis.id')
+                ->where('seksis.status', '1')
+                ->where('participants.keterangan', '1')
+                ->where('participants.user_id', $user_id)
+                ->where('seksis.hari', $request->hari)
+                ->count();
+
+            if ($hitung_data == null) {
+                return response()->json([
+                    'status' => 'Error',
+                    "message" => "Tidak ada data kelas anda pada hari",
+                    "data" => null,
+                ]);
+            } else {
+                // memilih seksi berdasarkan hari yang dipilih user
+                $data_hari = DB::table('seksis')
+                    ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
+                    ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
+                    ->join('participants', 'participants.id_seksi', '=', 'seksis.id')
+                    ->where('seksis.status', '1')
+                    ->where('participants.keterangan', '1')
+                    ->where('participants.user_id', $user_id)
+                    ->where('seksis.hari', $request->hari)
+                    ->orderBy('id', 'DESC')
+                    ->get();
+
+                return response()->json([
+                    'status' => 'Success',
+                    'message' => 'Kelas/seksi berhasil ditemukan',
+                    'data' => $data_hari
+                ]);
+            }
+        } catch (Exception $e) {
+            return response()->json(["status" => "Error", "message" => $e->getMessage()], $e->getCode());
+        }
+    }
 }

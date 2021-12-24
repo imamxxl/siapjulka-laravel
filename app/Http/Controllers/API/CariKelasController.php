@@ -109,7 +109,7 @@ class CariKelasController extends Controller
         }
     }
 
-    function search(Request $request, $id_user)
+    function search(Request $request, $user_id)
     {
         try {
             $validator = Validator::make(
@@ -132,26 +132,38 @@ class CariKelasController extends Controller
             $count_clue = DB::table('seksis')
                 ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
                 ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
-                ->where('nama_mk', 'like', "%" . $clue . "%")
-                ->orWhere('nama_dosen', 'like', "%" . $clue . "%")
-                ->orWhere('kode_seksi', 'like', "%" . $clue . "%")
-                ->orWhere('hari', 'like', "%" . $clue . "%")
+                ->join('participants', 'participants.id_seksi', '=', 'seksis.id')
+                ->where('participants.user_id', $user_id)
+                ->where('matakuliahs.nama_mk', 'like', "%" . $clue . "%")
+                ->where('participants.user_id', $user_id)
+                ->orWhere('dosens.nama_dosen', 'like', "%" . $clue . "%")
+                ->where('participants.user_id', $user_id)
+                ->orWhere('seksis.kode_seksi', 'like', "%" . $clue . "%")
+                ->where('participants.user_id', $user_id)
+                ->orWhere('seksis.hari', 'like', "%" . $clue . "%")
+                ->where('participants.user_id', $user_id)
                 ->count();
 
             // mengambil data dari table pegawai sesuai pencarian data
             $clue = DB::table('seksis')
                 ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
                 ->join('dosens', 'seksis.kode_dosen', '=', 'dosens.kode_dosen')
-                ->where('nama_mk', 'like', "%" . $clue . "%")
-                ->orWhere('nama_dosen', 'like', "%" . $clue . "%")
-                ->orWhere('kode_seksi', 'like', "%" . $clue . "%")
-                ->orWhere('hari', 'like', "%" . $clue . "%")
+                ->join('participants', 'participants.id_seksi', '=', 'seksis.id')
+                ->where('participants.user_id', $user_id)
+                ->where('matakuliahs.nama_mk', 'like', "%" . $clue . "%")
+                ->where('participants.user_id', $user_id)
+                ->orWhere('dosens.nama_dosen', 'like', "%" . $clue . "%")
+                ->where('participants.user_id', $user_id)
+                ->orWhere('seksis.kode_seksi', 'like', "%" . $clue . "%")
+                ->where('participants.user_id', $user_id)
+                ->orWhere('seksis.hari', 'like', "%" . $clue . "%")
+                ->where('participants.user_id', $user_id)
                 ->get();
 
             if ($count_clue == 0) {
                 return response()->json(["status" => "Gagal", "message" => "Kelas tidak ditemukan.", "data" => null]);
             } else {
-                return response()->json($clue);
+                return response()->json(["status" => "Success", "message" => "Data berhasil ditemukan", "data" => $clue]);
             }
         } catch (Exception $e) {
             return response()->json(["status" => "Error", "message" => $e->getMessage()], $e->getCode());

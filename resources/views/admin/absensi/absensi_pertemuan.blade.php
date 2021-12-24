@@ -201,6 +201,10 @@
                         <a href="/absensi/detail/{{ $data->id }}/pertemuan/{{ $data->id_pertemuan }}/print"
                             target="_blank" class="btn bg-green"><i class="fa fa-print"></i>
                             Print Absensi</a>
+                        <button type="button" class="btn btn-md btn-primary" data-toggle="modal"
+                            data-target="#modal-verifikasi-all">
+                            <i class="fa fa-check"> Verifikasi Semua Kehadiran</i>
+                        </button>
                     </div>
 
                     <div class="card-body box-body table-hover">
@@ -579,6 +583,33 @@
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Batal</button>
                         <a href="/delete/seksi/{{ $data->id_seksi }}/pertemuan/{{ $data->id_pertemuan }}"
                             class="btn btn-danger">Hapus</a>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <!-- Modal Verifikasi All Absensi dan Pertemuan -->
+        <div class="modal fade" id="modal-verifikasi-all">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"> Verifikasi semua absensi matakuliah {{ $item->nama_mk }} ?
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-blue"><b>Tip!</b></p>
+                        <P>Pastikan anda telah melakukan pengecekan terhadap semua data absensi mahasiswa pada pertemuan ini sebelum melakukan verifikasi menyeluruh.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Batal</button>
+                        <a href="/absensi/verifikasi_all/seksi/{{ $data->id_seksi }}/pertemuan/{{ $data->id_pertemuan }}"
+                            class="btn btn-primary">Verifikasi</a>
                     </div>
                 </div>
                 <!-- /.modal-content -->
