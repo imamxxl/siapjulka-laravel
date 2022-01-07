@@ -114,7 +114,7 @@ class AbsensiController extends Controller
                     return response()->json(
                         [
                             "status" => "Error",
-                            "message" => "QR Code tidak cocok"
+                            "message" => "QR Code tidak cocok dengan pertemuan manapun."
                         ]
                     );
                 }
