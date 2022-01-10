@@ -121,7 +121,7 @@
                         <h3 class="panel-title">Tambah Peserta</h3>
                     </div>
                     <div class="panel-body">
-                        <form action="/seksi_dosen/detail/add_participant/" method="POST" enctype="multipart/form-data">
+                        <form action="/seksi_dosen/detail/add_participant" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <div class="row">
