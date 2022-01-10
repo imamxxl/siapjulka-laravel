@@ -88,11 +88,7 @@
                         @endif
 
                         <!-- Catatan absensi tiap mahasiswa -->
-                        @if ($data->catatan == null)
-                            <td align="center"><i class="text-muted">-</i></td>
-                        @else
-                            <td>{{ $data->catatan }}</td>
-                        @endif
+                        <td>-</td>
                     </tr>
                 @endforeach
             </table>
