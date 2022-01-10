@@ -19,6 +19,7 @@ use App\Http\Controllers\AbsensiDosenController;
 use App\Http\Controllers\AbsensiMahasiswaController;
 use App\Http\Controllers\CariKelasController;
 use App\Http\Controllers\FAQMahasiswaController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -37,7 +38,7 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::middleware(['admin'])->group(function () {
         // Dashboard
@@ -121,7 +122,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/seksi/download_excel', [SeksiController::class, 'downloadExcel']);
         Route::get('/seksi/download_panduan', [SeksiController::class, 'downloadPanduan']);
         Route::get('/seksi/detail/{id}', [SeksiController::class, 'detail']);
-        Route::post('/seksi/detail/add_participant/', [SeksiController::class, 'addParticipant']);
+        Route::post('/seksi/detail/add_participant', [SeksiController::class, 'addParticipant']);
         Route::get('/seksi/hapus_peserta/{id_participant}', [SeksiController::class, 'deleteParticipant']);
         Route::get('/seksi/verifikasi_peserta/{id_participant}', [SeksiController::class, 'verifParticipant']);
         Route::post('/seksi/update/{id}', [SeksiController::class, 'update']);
@@ -133,7 +134,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
         Route::get('/absensi/detail/{id}', [AbsensiController::class, 'detailAbsensi']);
         Route::get('/absensi/lihat_peserta/{id}', [AbsensiController::class, 'lihatPeserta']);
-        Route::post('/absensi/insert_pertemuan_absensi/', [AbsensiController::class, 'insertPertemuanAbsensi']);
+        Route::post('/absensi/insert_pertemuan_absensi', [AbsensiController::class, 'insertPertemuanAbsensi']);
         Route::get('/absensi/detail/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiController::class, 'detailPertemuan']);
         Route::get('/absensi/verifikasi_absensi/{id_absensi}', [AbsensiController::class, 'verifikasiAbsensi']);
         Route::get('/absensi/verifikasi_all/seksi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiController::class, 'verifikasiAbsensiAll']);
@@ -160,7 +161,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/seksi_dosen/download_excel', [SeksiDosenController::class, 'downloadExcel']);
         Route::get('/seksi_dosen/download_panduan', [SeksiDosenController::class, 'downloadPanduan']);
         Route::get('/seksi_dosen/detail/{id}', [SeksiDosenController::class, 'detail']);
-        Route::post('/seksi_dosen/detail/add_participant/', [SeksiDosenController::class, 'addParticipant']);
+        Route::post('/seksi_dosen/detail/add_participant', [SeksiDosenController::class, 'addParticipant']);
         Route::get('/seksi_dosen/hapus_peserta/{id_participant}', [SeksiDosenController::class, 'deleteParticipant']);
         Route::get('/seksi_dosen/verifikasi_peserta/{id_participant}', [SeksiDosenController::class, 'verifParticipant']);
         Route::post('/seksi_dosen/update/{id}', [SeksiDosenController::class, 'update']);
@@ -172,7 +173,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/absensi_dosen', [AbsensiDosenController::class, 'index'])->name('absensi-dosen');
         Route::get('/absensi_dosen/detail/{id}', [AbsensiDosenController::class, 'detailAbsensi']);
         Route::get('/absensi_dosen/lihat_peserta/{id}', [AbsensiDosenController::class, 'lihatPeserta']);
-        Route::post('/absensi_dosen/insert_pertemuan_absensi/', [AbsensiDosenController::class, 'insertPertemuanAbsensi']);
+        Route::post('/absensi_dosen/insert_pertemuan_absensi', [AbsensiDosenController::class, 'insertPertemuanAbsensi']);
         Route::get('/absensi_dosen/detail/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiDosenController::class, 'detailPertemuan']);
         Route::get('/absensi_dosen/verifikasi_absensi/{id_absensi}', [AbsensiDosenController::class, 'verifikasiAbsensi']);
         Route::get('/absensi_dosen/verifikasi_all/seksi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiDosenController::class, 'verifikasiAbsensiAll']);
