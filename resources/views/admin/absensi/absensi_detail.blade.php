@@ -169,7 +169,7 @@
                     </div>
 
                     <div class="modal-body">
-                        <form action="/absensi/insert_pertemuan_absensi/" method="POST" enctype="multipart/form-data">
+                        <form action="/absensi/insert_pertemuan_absensi" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="box-body">
                                 <div class="form-group hidden">
