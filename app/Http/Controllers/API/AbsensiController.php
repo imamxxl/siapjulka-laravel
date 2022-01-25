@@ -144,19 +144,17 @@ class AbsensiController extends Controller
             $validator = Validator::make($request->all(), [
                 "id_absensi" => "required",
                 "device_id" => "required",
-                'file' => 'required|mimes:pdf|max:2048',
-
-
+                "file" => "required|mimes:pdf|max:2048",
             ], [
-                'id_absensi.required' => 'Device id wajib ada',
-                'device_id.required' => 'Device id wajib ada',
-                'file.required' => 'File harus diupload',
-                'file.mimes' => 'Format tidak sesuai. Silahkan pilih file format PDF',
-                'file.max' => 'Size file dokumen tidak boleh lebih dari 2048KB / 2MB',
+                "file.required" => "File harus diupload",
+                "file.mimes" => "Format tidak sesuai. Silahkan pilih file format PDF",
+                "file.max" => "Size file dokumen tidak boleh lebih dari 2048KB / 2MB",
+                "id_absensi.required" => "Device id wajib ada",
+                "device_id.required" => "Device id wajib ada",
             ]);
 
             if ($validator->fails()) {
-                throw new Exception($validator->errors()->first(), 400);
+                throw new Exception($validator->errors()->first(), 403);
             }
 
             // cek verifikasi absensi
