@@ -45,7 +45,7 @@
                         <h3 class="panel-title">Tambah Peserta</h3>
                     </div>
                     <div class="panel-body">
-                        <form action="/seksi/detail/add_participant" method="POST" enctype="multipart/form-data">
+                        <form action="/seksi_dosen/detail/add_participant" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <div class="row">
@@ -222,7 +222,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Batal</button>
-                                <a href="/seksi/verifikasi_peserta/{{ $data->id_participant }}"
+                                <a href="/seksi_dosen/verifikasi_peserta/{{ $data->id_participant }}"
                                     class="btn btn-success">Verifikasi</a>
                             </div>
                         </div>
@@ -253,7 +253,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
-                                <a href="/seksi/hapus_peserta/{{ $data->id_participant }}" class="btn btn-danger">Ya!</a>
+                                <a href="/seksi_dosen/hapus_peserta/{{ $data->id_participant }}" class="btn btn-danger">Ya!</a>
                             </div>
                         </div>
                         <!-- /.modal-content -->
