@@ -66,6 +66,13 @@
                         </div>
                     </div>
                     <!-- /.box-header -->
+
+                    <div class="box-body">
+                        <a href="/absensi/permatakuliah/print" target="_blank" class="btn btn-success"><i
+                            class="fa fa-print"></i>
+                        Print Absensi Permatakuliah</a>
+                    </div>
+
                     <div class="card-body box-body table-hover">
                         <table id="datatableid" class="table table-bordered table-hover table-striped">
                             <thead>

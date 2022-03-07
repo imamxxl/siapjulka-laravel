@@ -147,6 +147,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/delete/seksi/{id_seksi}/pertemuan/{id_pertemuan}', [AbsensiController::class, 'deletePertemuan']);
         Route::get('/absensi/detail/{id_seksi}/pertemuan/{id_pertemuan}/print', [AbsensiController::class, 'printPertemuan']);
         Route::get('/absensi/detail/{id_seksi}/print', [AbsensiController::class, 'printPerSemester']);
+        Route::get('/absensi/permatakuliah/print', [AbsensiController::class, 'printPerMatakuliah']);
     });
 
     Route::middleware(['dosen'])->group(function () {

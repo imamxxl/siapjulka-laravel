@@ -57,7 +57,7 @@
                                 <th>No</th>
                                 <th>NIM / Tahun Masuk</th>
                                 <th>Nama</th>
-                                <th>IMEI</th>
+                                <th>Device ID</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -70,7 +70,7 @@
                                     <td>{{ $data->nim }} / {{ $data->tahun }}</td>
                                     <td>{{ $data->nama_mahasiswa }}</td>
                                     @if ($data->imei == null)
-                                        <td><i class="text-muted">Belum ada IMEI</i></td>
+                                        <td><i class="text-muted">Belum ada Device ID</i></td>
                                     @else
                                         <td>{{ $data->imei }}</td>
                                     @endif
@@ -440,16 +440,16 @@
                                         <button type="button" class="close" data-dismiss="modal"
                                             aria-label="Close">
                                             <span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title">Reset IMEI {{ $data->nama_mahasiswa }} </h4>
+                                        <h4 class="modal-title">Reset Device ID {{ $data->nama_mahasiswa }} </h4>
                                     </div>
                                     <div class="modal-body">
                                         <div>
                                             <p><b>Catatan : </b></p>
                                         </div>
-                                        <p>Saat reset IMEI dilakukan, maka IMEI akan kosong.</p>
-                                        <p>Mahasiswa diminta untuk mengirim IMEI ulang melalui Smartphone masing-masing.</p>
+                                        <p>Saat reset Device ID dilakukan, maka Device ID akan kosong.</p>
+                                        <p>Mahasiswa diminta untuk mengirim Device ID ulang melalui Smartphone masing-masing.</p>
                                         <br>
-                                        <p>Anda yakin ingin <b> mereset </b> IMEI
+                                        <p>Anda yakin ingin <b> mereset </b> Device ID
                                             {{ $data->nama_mahasiswa }}?</p>
                                     </div>
                                     <div class="modal-footer">

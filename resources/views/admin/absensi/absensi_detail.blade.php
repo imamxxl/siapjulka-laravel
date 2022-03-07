@@ -163,7 +163,8 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="text-center modal-title">Buat Pertemuan Perkuliahan Matakuliah @foreach ($nama_matakuliah as $makul) {{ $makul->nama_mk }}
+                        <h4 class="text-center modal-title">Buat Pertemuan Perkuliahan Matakuliah @foreach ($nama_matakuliah as $makul)
+                                {{ $makul->nama_mk }}
                             @endforeach
                         </h4>
                     </div>
@@ -315,7 +316,6 @@
                 })
             })
         </script>
-
     @endif
 
 @endsection

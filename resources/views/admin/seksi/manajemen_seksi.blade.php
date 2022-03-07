@@ -69,6 +69,7 @@
                                 <th>Kode MK</th>
                                 <th>Matakuliah</th>
                                 <th>SKS</th>
+                                <th>Token</th>
                                 <th>Jadwal</th>
                                 <th>Dosen</th>
                                 <th>Status</th>
@@ -84,6 +85,7 @@
                                     <td>{{ $data->kode_mk }}</td>
                                     <td>{{ $data->nama_mk }}</td>
                                     <td>{{ $data->sks }}</td>
+                                    <td>{{ $data->token }}</td>
                                     <td>{{ $data->kode_ruang }} <br>
                                         {{ $data->hari . ', ' . $data->jadwal_mulai . '-' . $data->jadwal_selesai }}
                                     </td>
