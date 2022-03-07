@@ -979,12 +979,8 @@ class AbsensiController extends Controller
     {
         // Fetch data dari tabel absensi di mana data akan disaring dengan where sesuai $id_seksi dan $id_pertemuan
         $absensis = DB::table('absensis')
-            // ->join('pertemuans', 'absensis.id_pertemuan', '=', 'pertemuans.id_pertemuan')
             ->join('seksis', 'absensis.id_seksi', '=', 'seksis.id')
             ->join('matakuliahs', 'seksis.kode_mk', '=', 'matakuliahs.kode_mk')
-            // ->join('users', 'absensis.id_user', '=', 'users.id')
-            // ->where('absensis.id_seksi', $id_seksi)
-            // ->where('absensis.id_pertemuan', $id_pertemuan)
             ->where('seksis.status', '=', '1')
             ->groupBy('seksis.kode_seksi')
             ->orderBy('kode_seksi', 'ASC')
@@ -1029,56 +1025,6 @@ class AbsensiController extends Controller
                 ->where('absensis.id_seksi', '=', $deteksi_seksi[$i])
                 ->count();
         }
-
-        // // mendapatkan kode_seksi dari database
-        // $kode_seksi = DB::table('seksis')
-        //     ->where('seksis.id', $id_seksi)
-        //     ->value('kode_seksi');
-
-        // // variabel penghitung peserta yang hadir
-        // $hitung_absensi_hadir = DB::table('absensis')
-        //     ->where('keterangan', 'hadir')
-        //     ->where('absensis.id_seksi', $id_seksi)
-        //     // ->where('absensis.id_pertemuan', $id_pertemuan)
-        //     ->where('verifikasi', '=', '1')
-        //     ->count();
-
-        // // variabel penghitung peserta yang izin
-        // $hitung_absensi_izin = DB::table('absensis')
-        //     ->where('keterangan', 'izin')
-        //     ->where('absensis.id_seksi', $id_seksi)
-        //     // ->where('absensis.id_pertemuan', $id_pertemuan)
-        //     ->where('verifikasi', '=', '1')
-        //     ->count();
-
-        // // variabel penghitung peserta yang alfa
-        // $hitung_absensi_alfa = DB::table('absensis')
-        //     ->where('keterangan', null)
-        //     ->where('absensis.id_seksi', $id_seksi)
-        //     // ->where('absensis.id_pertemuan', $id_pertemuan)
-        //     ->where('verifikasi', '=', '1')
-        //     ->count();
-
-        // // Variabel penghitung semua peserta
-        // $hitung_semua_peserta = DB::table('absensis')
-        //     ->where('absensis.id_seksi', $id_seksi)
-        //     // ->where('absensis.id_pertemuan', $id_pertemuan)
-        //     ->where('verifikasi', '=', '1')
-        //     ->count();
-
-        // Mengambil value qrcode dari database pada tabel absensis
-        // $qr_absensi = DB::table('absensis')
-        //     ->where('absensis.id_seksi', $id_seksi)
-        // ->where('absensis.id_pertemuan', $id_pertemuan)
-        // ->value('qrcode');
-
-        // // Generate QR-Code ekstensi PNG berdasarkan data $qr_absensi
-        // $qrcode = QrCode::format('png')
-        //     ->size(50)
-        //     ->color(0, 0, 0)
-        //     ->eyeColor(0, 0, 0, 0, 0, 0, 0)
-        //     ->backgroundColor(255, 255, 255)
-        //     ->generate($qr_absensi);
 
         // parsing data
         return view('admin.print.print_absensi_permatakuliah', compact(
